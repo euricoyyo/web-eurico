@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eurico - Cocker Spaniel Inglés | </title>
+  <meta name="description" content="Seguimiento cardiológico de Eurico, Cocker Spaniel Inglés. Tutor: Amador Díaz">
+  <style>
+    :root {
+      --primary: #90a3b1;
+      --primary-light: #e8f5e9;
+      --secondary: #f57c00;
+      --bg: #f8f9fa;
+      --card-bg: #ffffff;
+      --text: #212121;
+      --text-light: #757575;
+      --danger: #d32f2f;
+      --border: #e0e0e0;
+      --radius: 12px;
+      --shadow: 0 4px 6px rgba(0,0,0,0.05);
+      --header-height: 70px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: var(--header-height);
+    }
+
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding-top: var(--header-height);
+    }
+
+    /* MENÚ SUPERIOR FIJO */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      z-index: 1000;
+      height: var(--header-height);
+    }
+
+    .nav-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-menu {
+      display: flex;
+      list-style: none;
+      gap: 2rem;
+    }
+
+    .nav-link {
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--primary);
+    }
+
+    /* HEADER CON FOTO GRANDE */
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, #1b5e20 100%);
+      color: white;
+      padding: 3rem 0;
+    }
+
+    .header-content {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      display: grid;
+      grid-template-columns: 350px 1fr;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .photo-container {
+      position: relative;
+      text-align: center;
+    }
+
+    .main-photo {
+      width: 100%;
+      max-width: 350px;
+      height: 400px;
+      object-fit: cover;
+      border-radius: var(--radius);
+      border: 5px solid white;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      background: linear-gradient(135deg, #424242, #212121);
+    }
+
+    .photo-badge {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: var(--secondary);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .header-info h1 {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+      font-weight: 800;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .info-item {
+      background: rgba(255,255,255,0.15);
+      padding: 1rem;
+      border-radius: 8px;
+      border-left: 4px solid var(--secondary);
+    }
+
+    .info-item label {
+      display: block;
+      font-size: 0.85rem;
+      opacity: 0.9;
+      margin-bottom: 0.25rem;
+    }
+
+    .info-item strong {
+      font-size: 1.1rem;
+      display: block;
+    }
+
+    .diagnosis-box {
+      background: rgba(255, 152, 0, 0.2);
+      border: 2px solid var(--secondary);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+
+    .diagnosis-box h3 {
+      color: var(--secondary);
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    /* SECCIONES */
+    section {
+      padding: 4rem 0;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding-bottom: 1rem;
+      border-bottom: 3px solid var(--primary-light);
+    }
+
+    /* CARDS */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    .card h3 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* TABLAS */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    .data-table th,
+    .data-table td {
+      text-align: left;
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .data-table th {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .data-table tr:hover {
+      background: var(--bg);
+    }
+
+    .highlight {
+      color: var(--danger);
+      font-weight: 600;
+    }
+
+    /* ALERT BOX */
+    .alert-box {
+      background: #fff3e0;
+      border-left: 5px solid var(--secondary);
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+    }
+
+    .alert-box h4 {
+      color: var(--secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    /* MEDICATION */
+    .progress-bar-container {
+      background: var(--border);
+      height: 12px;
+      border-radius: 6px;
+      margin: 1.5rem 0;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+
+    .med-section {
+      margin: 2rem 0;
+    }
+
+    .med-section h3 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .med-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem;
+      background: var(--bg);
+      border-radius: 10px;
+      margin-bottom: 0.75rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: 2px solid transparent;
+    }
+
+    .med-item:hover {
+      transform: translateX(5px);
+      border-color: var(--primary-light);
+      box-shadow: var(--shadow);
+    }
+
+    .med-item.taken {
+      background: var(--primary-light);
+      border-color: var(--primary);
+    }
+
+    .med-item.taken .med-name {
+      text-decoration: line-through;
+      color: var(--text-light);
+    }
+
+    .checkbox {
+      width: 28px;
+      height: 28px;
+      border: 2px solid var(--primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .med-item.taken .checkbox {
+      background: var(--primary);
+    }
+
+    .med-item.taken .checkbox::after {
+      content: "✓";
+    }
+
+    /* INTERACTION */
+    .interaction-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .interaction-box {
+      background: linear-gradient(135deg, #7dabcd, #bbdefb);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      text-align: center;
+    }
+
+    .interaction-box h3 {
+      color: #1565c0;
+      margin-bottom: 1rem;
+      font-size: 1.4rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 2rem;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      margin: 0.5rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 1rem;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+
+    .btn-whatsapp {
+      background: #25D366;
+      color: white;
+    }
+
+    .btn-email {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--text);
+      color: white;
+      text-align: center;
+      padding: 3rem 1rem;
+      margin-top: 4rem;
+    }
+
+    footer a {
+      color: var(--secondary);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .nav-menu {
+        position: fixed;
+        left: -100%;
+        top: var(--header-height);
+        flex-direction: column;
+        background: white;
+        width: 100%;
+        text-align: center;
+        transition: 0.3s;
+        box-shadow: 0 10px 27px rgba(0,0,0,0.05);
+        padding: 2rem 0;
+        gap: 1rem;
+      }
+
+      .nav-menu.active {
+        left: 0;
+      }
+
+      .nav-toggle {
+        display: block;
+      }
+
+      .header-content {
+        grid-template-columns: 1fr;
+      }
+
+      .photo-container {
+        order: -1;
+      }
+
+      .main-photo {
+        max-width: 280px;
+        height: 320px;
+        margin: 0 auto;
+        display: block;
+      }
+
+      .header-info h1 {
+        font-size: 2rem;
+        text-align: center;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+      }
+
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ANIMACIONES */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    section {
+      animation: fadeIn 0.6s ease-out;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MENÚ SUPERIOR -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="#" class="nav-logo">🐕 Eurico</a>
+      <button class="nav-toggle" onclick="toggleMenu()">☰</button>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="#inicio" class="nav-link active">🏠 Inicio</a></li>
+        <li><a href="#informe" class="nav-link">📋 Informe</a></li>
+        <li><a href="#medicacion" class="nav-link">💊 Medicación</a></li>
+        <li><a href="#interaccion" class="nav-link">💬 Contacto</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HEADER CON FOTO -->
+  <header id="inicio">
+    <div class="header-content">
+      <div class="photo-container">
+        <img src="eurico.jpg" alt="Eurico - Cocker Spaniel Inglés" class="main-photo" onerror="this.style.display='none';">
+        <div class="photo-badge">🐕 5 años</div>
+      </div>
+      
+      <div class="header-info">
+        <h1>🫀 Eurico</h1>
+        <p style="font-size: 1.2rem; margin-bottom: 1.5rem; opacity: 0.95;">Cocker Spaniel Inglés</p>
+        
+        <div class="info-grid">
+          <div class="info-item">
+            <label>Tutor</label>
+            <strong>Amador Díaz Díaz</strong>
+          </div>
+          <div class="info-item">
+            <label>Peso</label>
+            <strong>13.8 kg</strong>
+          </div>
+          <div class="info-item">
+            <label>Fecha Estudio</label>
+            <strong>27/05/26</strong>
+          </div>
+          <div class="info-item">
+            <label>Frecuencia Cardíaca</label>
+            <strong>88 lpm</strong>
+          </div>
+        </div>
+        
+        <div class="diagnosis-box">
+          <h3>⚠️ Diagnóstico Principal</h3>
+          <p><strong>CMD Estadio B2/c</strong> con disfunción sistólica grave. Insuficiencia mitral severa y posible hipertensión pulmonar moderada.</p>
+          <p><strong>Pero me voy a curar pronto y poner como un toro &#128522;</strong></p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- SECCIÓN INFORME -->
+  <section id="informe">
+    <h2 class="section-title">📋 Informe Cardiológico Completo</h2>
+    
+    <div class="alert-box">
+      <h4>🩺 Exploración General</h4>
+      <p>Paciente consciente, alerta y cooperativo, más o menos...... ;.) . Mucosas óptimas con TRC&lt;2seg. Ligera taquipnea sin refuerzo abdominal. Soplo grado 5/6 con PMI en proyección mitral. Pulso fuerte y sincrónico.</p>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>📊 Valores Ecocardiográficos Principales</h3>
+        <table class="data-table">
+          <tr><th>Parámetro</th><th>Valor</th><th>Referencia</th></tr>
+          <tr><td>Fracción Acortamiento</td><td>31%</td><td>30-46%</td></tr>
+          <tr><td>Fracción Eyección (Simpson)</td><td>57%</td><td>&gt;50%</td></tr>
+          <tr><td>Ratio LA:AO (Cornell)</td><td class="highlight">2.51</td><td>0.8-1.6</td></tr>
+          <tr><td>EDVI (Vol. Diastólico)</td><td class="highlight">288.9 ml/m²</td><td>&lt;100 ml/m²</td></tr>
+          <tr><td>ESVI (Vol. Sistólico)</td><td class="highlight">123.6 ml/m²</td><td>&lt;30 ml/m²</td></tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <h3>🔍 Hallazgos Clínicos</h3>
+        <ul style="padding-left: 1.2rem; line-height: 2;">
+          <li>Grave distensión ventricular diastólica</li>
+          <li>Distensión auricular con grave incremento de ratio</li>
+          <li>Marcada sobrecarga sistólica y diastólica</li>
+          <li>Insuficiencia mitral marcada</li>
+          <li>Moderada distensión de vena pulmonar</li>
+          <li>Posible hipertensión pulmonar moderada (33%)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>💊 Tratamiento Recomendado</h3>
+      <div class="grid-2">
+        <div>
+          <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Medicación:</h4>
+          <ul style="padding-left: 1.2rem; line-height: 1.8;">
+            <li><strong>Pimobendan:</strong> 0.27mg/kg/12h (1½ comp 2.5mg)</li>
+            <li><strong>Espironolactona:</strong> 1.8mg/kg/24h (25mg)</li>
+            <li><strong>Furosemida:</strong> 1.08mg/kg/12h (15mg)</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Recomendaciones:</h4>
+          <ul style="padding-left: 1.2rem; line-height: 1.8;">
+            <li>Cambio a dieta comercial (Royal Canin/Hill's)</li>
+            <li>Analítica: electrolitos, taurina, tiroides, troponina I</li>
+            <li>Suplementos cardiacos (Inucardin)</li>
+            <li>Reevaluación en 1 mes (Junio 2026)</li>
+            <li>Estudio Holter si no hay mejora</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN MEDICACIÓN -->
+  <section id="medicacion" style="background: white;">
+    <h2 class="section-title">💊 Control de Medicación Diaria</h2>
+    
+    <div class="card">
+      <p style="margin-bottom: 1.5rem; color: var(--text-light);">Haz clic en cada medicamento para marcarlo como administrado. El progreso se guarda automáticamente en tu navegador.</p>
+      
+      <div style="background: var(--primary-light); padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+          <span style="font-weight: 600; color: var(--primary);">Progreso del día</span>
+          <span id="progress-text" style="font-weight: 700; color: var(--primary);">0/5</span>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+      </div>
+
+      <div class="med-section">
+        <h3>☀️ Mañana (con comida)</h3>
+        
+        <div class="med-item" onclick="toggleMed('pimo-m', this)">
+          <div>
+            <div class="med-name" style="font-weight: 600; font-size: 1.1rem;">Pimobendan</div>
+            <div style="color: var(--text-light); margin-top: 0.25rem;">2.5 mg • 1 + ½ comprimidos</div>
+          </div>
+          <div class="checkbox"></div>
+        </div>
+
+        <div class="med-item" onclick="toggleMed('furo-m', this)">
+          <div>
+            <div class="med-name" style="font-weight: 600; font-size: 1.1rem;">Furosemida</div>
+            <div style="color: var(--text-light); margin-top: 0.25rem;">10 mg • 1 + ½ comprimidos</div>
+          </div>
+          <div class="checkbox"></div>
+        </div>
+
+        <div class="med-item" onclick="toggleMed('espi', this)">
+          <div>
+            <div class="med-name" style="font-weight: 600; font-size: 1.1rem;">Espironolactona</div>
+            <div style="color: var(--text-light); margin-top: 0.25rem;">50 mg • ½ comprimido</div>
+          </div>
+          <div class="checkbox"></div>
+        </div>
+      </div>
+
+      <div class="med-section">
+        <h3>🌙 Tarde (con comida)</h3>
+        
+        <div class="med-item" onclick="toggleMed('pimo-t', this)">
+          <div>
+            <div class="med-name" style="font-weight: 600; font-size: 1.1rem;">Pimobendan</div>
+            <div style="color: var(--text-light); margin-top: 0.25rem;">2.5 mg • 1 + ½ comprimidos</div>
+          </div>
+          <div class="checkbox"></div>
+        </div>
+
+        <div class="med-item" onclick="toggleMed('furo-t', this)">
+          <div>
+            <div class="med-name" style="font-weight: 600; font-size: 1.1rem;">Furosemida</div>
+            <div style="color: var(--text-light); margin-top: 0.25rem;">10 mg • 1 + ½ comprimidos</div>
+          </div>
+          <div class="checkbox"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🌿 Suplementos Recomendados</h3>
+      <div class="grid-2">
+        <div>
+          <h4 style="color: var(--secondary); margin-bottom: 0.5rem;">Inucardin</h4>
+          <p style="color: var(--text-light);">CoQ10, L-carnitina, taurina</p>
+        </div>
+        <div>
+          <h4 style="color: var(--secondary); margin-bottom: 0.5rem;">Omega-3</h4>
+          <p style="color: var(--text-light);">1000 mg/día</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN INTERACCIÓN -->
+  <section id="interaccion">
+    <h2 class="section-title">💬 Zona de Contacto</h2>
+    
+    <div class="interaction-grid">
+      <!-- Para el tutor -->
+      <div class="card" style="text-align: center;">
+        <h3>📺 Canal de YouTube de Eurico</h3>
+        <p style="color: var(--text-light); margin-bottom: 1.5rem;">Haz clic en la imagen para visitar el canal, ver sus avances y dejar tus comentarios. ¡Tu apoyo significa mucho!</p>
+        <a href="https://www.youtube.com/@EuricoyYo" target="_blank" style="display: inline-block; border-radius: var(--radius); overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+          <img src="https://i.ytimg.com/vi/Up3IcHAQXqI/oar2.jpg?sqp=-oaymwEdCJUDENAFSFWQAgHyq4qpAwwIARUAAIhCcAHAAQY=&rs=AOn4CLBzWMJsxcN7SKfByPFOirvMipLXJg&usqp=CCk" alt="Canal de YouTube de Eurico" style="width: 100%; max-width: 450px; height: auto; display: block;">
+        </a>
+        <p style="color: var(--primary); margin-top: 1.5rem; font-weight: 600; font-size: 1.1rem;">¡Gracias por seguir a Eurico! 🐾</p>
+      </div>
+
+      <!-- Para visitantes -->
+      <div class="interaction-box">
+        <h3>👋 ¿Eres familiar o amigo?</h3>
+        <p style="margin: 1.5rem 0; font-size: 1.05rem;">Ponte en contacto con Amador para saber cómo está Eurico o enviarle un saludo. ¡Sin registros ni complicaciones!</p>
+        
+        <a href="mailto:elatareaoytal@gmail.com?subject=Saludo%20para%20Eurico&body=Hola%20Amador,%20espero%20que%20Eurico%20esté%20muy%20bien." 
+           class="btn btn-email"
+           style="width: 100%; justify-content: center; margin: 0.5rem 0;">
+          ✉️ Enviar Email
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div style="max-width: 1100px; margin: 0 auto;">
+      <p style="font-size: 1.2rem; margin-bottom: 1rem;">🏥 Clínicas Veterinarias</p>
+      
+      <!-- CLÍNICA 1 -->
+      <div style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.2);">
+        <p style="font-weight: 600; margin-bottom: 0.5rem;">Cardiología Veterinaria Asturias</p>
+        <p style="margin-bottom: 0.5rem;">Dra. M.ª José Capilla Tatay | Avd. del Llano, 61, Gijón</p>
+        <p><a href="tel:984004492">📞 984 00 44 92</a></p>
+      </div>
+      
+      <!-- CLÍNICA 2 -->
+      <div style="margin-bottom: 1.5rem;">
+        <p style="font-weight: 600; margin-bottom: 0.5rem;">Clínica Veterinaria Sabuvet</p>
+        <p style="margin-bottom: 0.5rem;">Calle de la Cámara, 56, 33401 Avilés, Asturias</p>
+        <p style="margin-bottom: 0.5rem;">
+          <a href="tel:985522827">📞 985 52 28 27</a> | 
+          <a href="tel:684612466">🚨 Urgencias: 684 612 466</a>
+        </p>
+        <p><a href="https://www.sabuvet.com/" target="_blank">🌐 www.sabuvet.com</a></p>
+      </div>
+      
+      <p style="opacity: 0.8; font-size: 0.9rem; margin-top: 2rem;">© 2026 Eurico - Cocker Spaniel Inglés</p>
+      <p style="opacity: 0.7; font-size: 0.85rem; margin-top: 0.5rem;">Creado con ❤️ por Amador Díaz</p>
+    </div>
+  </footer>
+
+  <!-- JAVASCRIPT -->
+  <script>
+    // MENÚ MÓVIL
+    function toggleMenu() {
+      const navMenu = document.getElementById('navMenu');
+      navMenu.classList.toggle('active');
+    }
+
+    // CERRAR MENÚ AL HACER CLICK EN UN ENLACE
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        document.getElementById('navMenu').classList.remove('active');
+        
+        // Actualizar link activo
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+      });
+    });
+
+    // ACTUALIZAR LINK ACTIVO AL SCROLLEAR
+    window.addEventListener('scroll', () => {
+      const sections = document.querySelectorAll('section, header');
+      const navLinks = document.querySelectorAll('.nav-link');
+      
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        if (scrollY >= (sectionTop - 150)) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href').slice(1) === current) {
+          link.classList.add('active');
+        }
+      });
+    });
+
+    // MEDICACIÓN
+    const meds = ['pimo-m', 'furo-m', 'espi', 'pimo-t', 'furo-t'];
+    const today = new Date().toDateString();
+
+    function initMeds() {
+      meds.forEach(id => {
+        const saved = localStorage.getItem(`med_${today}_${id}`);
+        const el = document.querySelector(`[onclick="toggleMed('${id}', this)"]`);
+        if (saved === 'true' && el) {
+          el.classList.add('taken');
+        }
+      });
+      updateProgress();
+    }
+
+    function toggleMed(id, element) {
+      element.classList.toggle('taken');
+      const isTaken = element.classList.contains('taken');
+      localStorage.setItem(`med_${today}_${id}`, isTaken);
+      updateProgress();
+    }
+
+    function updateProgress() {
+      let count = 0;
+      meds.forEach(id => {
+        if (localStorage.getItem(`med_${today}_${id}`) === 'true') count++;
+      });
+      const percentage = (count / meds.length) * 100;
+      document.getElementById('progress-bar').style.width = `${percentage}%`;
+      document.getElementById('progress-text').textContent = `${count}/${meds.length}`;
+      
+      if (count === meds.length) {
+        setTimeout(() => {
+          alert('🎉 ¡Excelente! Has completado la medicación de hoy.');
+        }, 500);
+      }
+    }
+
+    // INICIALIZAR
+    document.addEventListener('DOMContentLoaded', () => {
+      initMeds();
+    });
+  </script>
+</body>
+</html>
+
