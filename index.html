@@ -656,6 +656,55 @@
         transform: translateY(0);
       }
     }
+
+
+/* Estilos para la Alerta de la Taurina */
+.cardiorisk-alert {
+  background-color: #fff3e0;
+  border: 2px solid #e65100;
+  border-left: 8px solid #e65100;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.cardiorisk-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.cardiorisk-content h3 {
+  color: #e65100 !important;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.cardiorisk-content p {
+  color: #3e2723;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.cardiorisk-content p:last-child {
+  margin-bottom: 0;
+}
+
+.highlight-text {
+  background-color: #ffe0b2;
+  padding: 0.4rem;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+
+
   </style>
 </head>
 <body>
@@ -837,6 +886,18 @@
             <tr><td>SDMA (Función Renal)</td><td>11 µg/dL</td><td>0 - 14 µg/dL</td><td>Normal</td></tr>
             <tr><td>Creatinina</td><td>0,9 mg/dL</td><td>0,5 - 1,5 mg/dL</td><td>Normal</td></tr>
           </table>
+
+<!-- Caja de Alerta Médica para el Cardiólogo -->
+<div class="cardiorisk-alert">
+  <div class="cardiorisk-icon">⚠️</div>
+  <div class="cardiorisk-content">
+    <h3>Aviso Crítico para la Interpretación de la Taurina</h3>
+    <p>El nivel plasmático de Taurina registrado (<strong>132,70 µmol/L</strong>) se obtuvo cuando el paciente ya acumulaba <strong>una semana completa de suplementación activa con InuCardin</strong>.</p>
+    <p class="highlight-text">Este valor refleja la concentración bajo tratamiento. Por lo tanto, <strong> Preguntamos: ¿es posible una miocardiopatía por deficiencia dietética reversible?</strong>.</p>
+  </div>
+
+
+
 
           <div class="analitica-note">
             <strong>📝 Observación:</strong> La función renal se mantiene estable y dentro de parámetros normales. Los valores de T4 y TSH descartan patología tiroidea concurrente.
