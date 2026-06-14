@@ -1376,13 +1376,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log("Acceso de edición bloqueado para visitantes.");
         
         // Bloquea los clicks en los círculos de la medicación para que solo sea modo lectura
-      
- const elementosMedicacion = document.querySelectorAll(".medicamento, .medication-card, input, button, select");
-        elementosMedicacion.forEach(elemento => {
-            elemento.disabled = true;
-            elemento.style.pointerEvents = "none";
-            elemento.style.opacity = "0.75";
-        });
+
+              const seccionMedica = document.querySelector(".card table, .data-table") || document.querySelector(".card");
+        if (seccionMedica) {
+            seccionMedica.style.pointerEvents = "none";
+            seccionMedica.style.opacity = "0.85";
+        }
+  
     }
 });
 </script>
