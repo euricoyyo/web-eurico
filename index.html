@@ -712,11 +712,50 @@
   box-sizing: border-box;
 }
 
+/* --- Estilos para el Aviso de Almacenamiento --- */
+.cookie-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #1e1e1e; /* Color oscuro que combina con Debian/Linux */
+    color: #ffffff;
+    text-align: center;
+    padding: 15px 20px;
+    box-shadow: 0 -4px 15px rgba(0,0,0,0.5);
+    z-index: 9999; /* Se asegura de flotar por encima de todo */
+    display: none; /* JavaScript lo activará si es necesario */
+    box-sizing: border-box;
+    font-family: sans-serif;
+    font-size: 14px;
+}
+
+.cookie-banner button {
+    background-color: #007acc; /* Azul estándar de botones interactivos */
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    margin-left: 15px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background 0.2s ease;
+}
+
+.cookie-banner button:hover {
+    background-color: #005999;
+}
 
 
   </style>
 </head>
 <body>
+
+  <!-- Aviso de Cookies y Almacenamiento -->
+    <div id="cookie-banner" class="cookie-banner">
+        <p>Este sitio web utiliza el almacenamiento local para garantizar el correcto funcionamiento de tus herramientas.</p>
+        <button id="accept-cookies">Entendido</button>
+    </div>
 
   <nav class="navbar">
     <div class="nav-container">
@@ -1284,6 +1323,39 @@
       loadYouTubeVideos();
     });
   </script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    
+    // ==========================================
+    // LÓGICA DEL AVISO DE COOKIES / ALMACENAMIENTO
+    // ==========================================
+    const banner = document.getElementById("cookie-banner");
+    const botonAceptar = document.getElementById("accept-cookies");
+
+    // Si NO encuentra el registro de que ya aceptó, muestra el banner
+        if (!localStorage.getItem("advertencia_leida")) {
+        if (banner) banner.style.display = "block";
+    }
+
+
+    // Cuando haces clic en "Entendido"
+    if (botonAceptar) {
+        botonAceptar.addEventListener("click", () => {
+            localStorage.setItem("advertencia_leida", "true");
+            if (banner) banner.style.display = "none";
+        });
+    }
+
+});
+</script>
+
+
+
+
+
+  
 </body>
 </html>
 
