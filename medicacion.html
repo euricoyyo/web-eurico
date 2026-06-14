@@ -4,87 +4,103 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Historial de Medicación - Eurico</title>
-    
-    <!-- Cargamos la librería de forma directa y garantizada arriba -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <style>
+        :root {
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --bg-color: #f5f7fb;
+            --card-bg: #ffffff;
+            --text-main: #2c3e50;
+            --text-light: #7f8c8d;
+            --border-radius: 12px;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: #f5f7fb;
-            color: #2c3e50;
+            background-color: var(--bg-color);
+            color: var(--text-main);
             margin: 0;
             padding: 20px;
             display: flex;
             justify-content: center;
         }
+
         .container {
             width: 100%;
             max-width: 800px;
-            background: #ffffff;
+            background: var(--card-bg);
             padding: 25px;
-            border-radius: 12px;
+            border-radius: var(--border-radius);
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            box-sizing: border-box;
+            text-align: center;
         }
+
+        .header-actions {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 20px;
+        }
+
         .back-btn {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             text-decoration: none;
             color: white;
-            background-color: #3498db;
+            background-color: var(--primary);
             padding: 10px 16px;
             border-radius: 8px;
             font-weight: bold;
-            margin-bottom: 20px;
+            font-size: 0.9rem;
+            transition: background-color 0.2s;
         }
-        h1, p { text-align: center; }
-        .chart-wrapper { position: relative; height: 320px; width: 100%; }
+
+        .back-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        h1 {
+            color: var(--text-main);
+            margin: 10px 0 5px 0;
+            font-size: 1.8rem;
+        }
+
+        .subtitle {
+            color: var(--text-light);
+            margin-bottom: 40px;
+            font-size: 1rem;
+        }
+
+        .info-box {
+            background-color: #e8f4fd;
+            border-left: 5px solid var(--primary);
+            padding: 15px;
+            border-radius: 4px;
+            display: inline-block;
+            text-align: left;
+            max-width: 90%;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <a href="index.html" class="back-btn">⬅️ Volver al Panel</a>
-    <h1>📊 Registro Gráfico de Medicación</h1>
-    <p>Visualización simple de las dosis administradas a Eurico.</p>
+    <div class="header-actions">
+        <a href="index.html" class="back-btn">⬅️ Volver al Panel</a>
+    </div>
     
-    <div class="chart-wrapper">
-        <canvas id="medicationChart"></canvas>
+    <h1>📊 Registro Gráfico de Medicación</h1>
+    <p class="subtitle">Sección en mantenimiento técnico.</p>
+    
+    <div class="info-box">
+        <p style="margin: 0; font-weight: bold; color: #2c3e50;">🐾 Panel de Control Activo</p>
+        <p style="margin: 5px 0 0 0; font-size: 0.9rem; color: #555;">
+            Las tomas diarias se siguen registrando de forma segura bajo tu contraseña en la página principal.
+        </p>
     </div>
 </div>
-
-<script>
-// Forzamos la ejecución cuando la ventana esté completamente lista
-window.onload = function() {
-    // 1. Recuperar el historial de tu almacenamiento local
-    const history = JSON.parse(localStorage.getItem('med_history') || '[]');
-    
-    // 2. Fechas fijas escritas a mano (Texto puro) para evitar bucles infinitos en el navegador
-    const labels = ['2026-06-10', '2026-06-11', '2026-06-12', '2026-06-13', '2026-06-14'];
-
-    // 3. Conteo directo sin filtros complejos
-    const pimoData = labels.map(d => history.filter(h => h.date === d && h.medication === 'pimobendan').length);
-    const furoData = labels.map(d => history.filter(h => h.date === d && h.medication === 'furosemida').length);
-    const espiData = labels.map(d => history.filter(h => h.date === d && h.medication === 'espironolactona').length);
-
-    // 4. Inicialización básica de Chart.js
-    const ctx = document.getElementById('medicationChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [
-                { label: '💔 Pimobendan', data: pimoData, backgroundColor: '#e74c3c' },
-                { label: '💧 Furosemida', data: furoData, backgroundColor: '#3498db' },
-                { label: '💊 Espironolactona', data: espiData, backgroundColor: '#2ecc71' }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false
-        }
-    });
-};
-</script>
 
 </body>
 </html>
