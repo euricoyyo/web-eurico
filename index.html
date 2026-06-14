@@ -1326,70 +1326,37 @@
 
 
 <script>
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', () => {
     
-    // ==========================================
-    // 0. CARGA INICIAL DE TU WEB
-    // ==========================================
+    // 0. Carga original de tus datos
     initMeds();
     loadYouTubeVideos();
 
-    // ==========================================
-    // 1. LÓGICA DEL AVISO DE COOKIES
-    // ==========================================
+    // 1. Lógica exclusiva del aviso de cookies
     const banner = document.getElementById("cookie-banner");
     const botonAceptar = document.getElementById("accept-cookies");
 
+    // Si NO encuentra el registro de aceptación, muestra el banner
     if (!localStorage.getItem("advertencia_leida")) {
-        if (banner) banner.style.display = "block";
+        if (banner) {
+            banner.style.display = "block";
+        }
     }
 
+    // Cuando el usuario hace clic en "Entendido"
     if (botonAceptar) {
         botonAceptar.addEventListener("click", () => {
             localStorage.setItem("advertencia_leida", "true");
-            if (banner) banner.style.display = "none";
+            if (banner) {
+                banner.style.display = "none";
+            }
         });
     }
 
-    // ==========================================
-    // 2. LÓGICA DE SEGURIDAD (CONTROL MEDICACIÓN)
-    // ==========================================
-    
-    // Tu huella digital generada en Debian
-    const HUELLA_CORRECTA = "0bfb62e604614db5191371b5d16751f5d1d0226cfd069c15a63c667c74a59f54";
-    const claveGuardada = localStorage.getItem("token_eurico") || "";
-
-    // Algoritmo matemático SHA-256 nativo
-    async function generarHuella(texto) {
-        const msgBuffer = new TextEncoder().encode(texto);
-        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    }
-
-    const huellaCalculada = await generarHuella(claveGuardada);
-
-    if (huellaCalculada === HUELLA_CORRECTA) {
-        console.log("¡Identidad verificada! Bienvenido, Eurico.");
-        // Todo permanece activo para ti
-       } else {
-        console.log("Acceso de edición bloqueado para visitantes.");
-        
-        // Bloquea los clicks en los circulos de la medicación para que solo sea modo lectura
-        const intentoBloqueo = setInterval(() => {
-            const seccionMedica = document.querySelector(".card table, .data-table, #medicacion, .card");
-            if (seccionMedica) {
-                seccionMedica.style.pointerEvents = "none";
-                seccionMedica.style.opacity = "0.85";
-                clearInterval(intentoBloqueo);
-                console.log("¡Sección de medicación protegida con éxito!");
-            }
-        }, 500);
-    }
 });
 </script>
 
-
+  
 
   
 </body>
