@@ -1372,17 +1372,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (huellaCalculada === HUELLA_CORRECTA) {
         console.log("¡Identidad verificada! Bienvenido, Eurico.");
         // Todo permanece activo para ti
-    } else {
+       } else {
         console.log("Acceso de edición bloqueado para visitantes.");
         
-        // Bloquea los clicks en los círculos de la medicación para que solo sea modo lectura
-
-              const seccionMedica = document.querySelector(".card table, .data-table") || document.querySelector(".card");
-        if (seccionMedica) {
-            seccionMedica.style.pointerEvents = "none";
-            seccionMedica.style.opacity = "0.85";
-        }
-  
+        // Bloquea los clicks en los circulos de la medicación para que solo sea modo lectura
+        const intentoBloqueo = setInterval(() => {
+            const seccionMedica = document.querySelector(".card table, .data-table, #medicacion, .card");
+            if (seccionMedica) {
+                seccionMedica.style.pointerEvents = "none";
+                seccionMedica.style.opacity = "0.85";
+                clearInterval(intentoBloqueo);
+                console.log("¡Sección de medicación protegida con éxito!");
+            }
+        }, 500);
     }
 });
 </script>
