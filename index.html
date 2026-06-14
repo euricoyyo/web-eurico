@@ -1190,29 +1190,82 @@
       });
       updateProgress();
     }
+// Variable global para recordar la autorización en la pestaña actual
+let isAuthorized = sessionStorage.getItem('user_authorized') === 'true';
 
-    function toggleMed(id, element) {
-      element.classList.toggle('taken');
-      const isTaken = element.classList.contains('taken');
-      localStorage.setItem(`med_${today}_${id}`, isTaken);
-      updateProgress();
+// Función para validar la contraseña contra tu hash de Debian
+function authenticateUser(callback) {
+    const password = prompt("🔐 Introduce la contraseña de administrador para editar:");
+    if (!password) return;
+
+    // 🔴 REEMPLAZA ESTO: Pega aquí tu hash de 64 caracteres generado en tu terminal Debian
+    const correctHash = "0bfb62e604614db5191371b5d16751f5d1d0226cfd069c15a63c667c74a59f54"; 
+
+    crypto.subtle.digest("SHA-256", new TextEncoder().encode(password))
+    .then(buf => {
+        const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+        if (hex === correctHash) {
+            isAuthorized = true;
+            sessionStorage.setItem('user_authorized', 'true');
+            alert("✅ Acceso concedido. Ya puedes registrar la medicación.");
+            if (callback) callback();
+        } else {
+            alert("❌ Contraseña incorrecta. Acceso denegado.");
+        }
+    }).catch(err => {
+        console.error("Error en la autenticación:", err);
+    });
+}
+
+// Tu función toggleMed protegida y conectada al gráfico histórico
+function toggleMed(id, element) {
+    // Si no estás autorizado, salta el prompt de clave antes de cambiar nada
+    if (!isAuthorized) {
+        authenticateUser(() => toggleMed(id, element));
+        return;
     }
 
-    function updateProgress() {
-      let count = 0;
-      meds.forEach(id => {
+    // Código original para marcar la casilla visualmente
+    element.classList.toggle('taken');
+    const isTaken = element.classList.contains('taken');
+    localStorage.setItem(`med_${today}_${id}`, isTaken);
+    updateProgress();
+
+    // NUEVO: Guardamos en el historial para que lo pinte 'medicacion.html'
+    if (isTaken) {
+        let history = JSON.parse(localStorage.getItem('med_history') || '[]');
+        const todayDate = new Date().toISOString().split('T')[0]; // Formato plano AAAA-MM-DD
+        
+        // Registramos la toma vinculando la fecha y el identificador de la pastilla
+        history.push({ date: todayDate, medication: id });
+        localStorage.setItem('med_history', JSON.stringify(history));
+    } else {
+        // Si desmarcas la casilla por error, la limpiamos del historial de gráficas
+        let history = JSON.parse(localStorage.getItem('med_history') || '[]');
+        const todayDate = new Date().toISOString().split('T')[0];
+        history = history.filter(h => !(h.date === todayDate && h.medication === id));
+        localStorage.setItem('med_history', JSON.stringify(history));
+    }
+}
+
+// Tu función original updateProgress intacta
+function updateProgress() {
+    let count = 0;
+    meds.forEach(id => {
         if (localStorage.getItem(`med_${today}_${id}`) === 'true') count++;
-      });
-      const percentage = (count / meds.length) * 100;
-      document.getElementById('progress-bar').style.width = `${percentage}%`;
-      document.getElementById('progress-text').textContent = `${count}/${meds.length}`;
-      
-      if (count === meds.length) {
+    });
+    const percentage = (count / meds.length) * 100;
+    document.getElementById('progress-bar').style.width = `${percentage}%`;
+    document.getElementById('progress-text').textContent = `${count}/${meds.length}`;
+
+    if (count === meds.length) {
         setTimeout(() => {
-          alert('🎉 ¡Excelente! Has completado la medicación de hoy.');
+            alert('🎉 ¡Excelente! Has completado la medicación de hoy.');
         }, 500);
-      }
     }
+}
+
+    
 
     function loadYouTubeVideos() {
       const channelId = 'UChqaB9zJvpuFM0SxzT6O3JQ';
