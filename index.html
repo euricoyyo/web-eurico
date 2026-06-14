@@ -1376,16 +1376,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log("Acceso de edición bloqueado para visitantes.");
         
         // Bloquea los clicks en los círculos de la medicación para que solo sea modo lectura
-        const contenedorMeds = document.getElementById("meds-container");
-        if (contenedorMeds) {
-            contenedorMeds.style.pointerEvents = "none"; 
-            contenedorMeds.style.opacity = "0.85"; // Un ligero tono apagado para indicar que no es interactivo
-        }
+      
+ const elementosMedicacion = document.querySelectorAll(".medicamento, .medication-card, input, button, select");
+        elementosMedicacion.forEach(elemento => {
+            elemento.disabled = true;
+            elemento.style.pointerEvents = "none";
+            elemento.style.opacity = "0.75";
+        });
     }
 });
 </script>
-
-
 
 
 
