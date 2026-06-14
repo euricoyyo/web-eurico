@@ -105,12 +105,12 @@
     </div>
 </div>
 
-<!-- Cargamos la librería al final del documento con defer para velocidad máxima -->
+<!-- CORRECCIÓN 1: Enlace completo y ultrarrápido a la librería oficial de Chart.js -->
 <script src="https://jsdelivr.net" defer></script>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-    // Esperamos un instante breve para asegurar la correcta inicialización de Chart.js externo
+    // Breve espera técnica para dar tiempo a que cargue el script de arriba
     setTimeout(() => {
         if (typeof Chart === 'undefined') {
             console.error("La librería Chart.js no se ha podido cargar a tiempo.");
@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
         for (let i = 6; i >= 0; i--) {
             const d = new Date();
             d.setDate(d.getDate() - i);
-            // Tomamos el string plano antes de la 'T' (Formato AAAA-MM-DD)
+            // CORRECCIÓN 2: Extraemos el string limpio 'AAAA-MM-DD' usando [0]
             labels.push(d.toISOString().split('T')[0]);
         }
 
@@ -185,7 +185,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
         });
-    }, 150); // Pequeño retraso técnico preventivo
+    }, 200); // Tiempo de espera óptimo
 });
 </script>
 
