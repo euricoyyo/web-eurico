@@ -353,11 +353,37 @@
       }
 
       .header-info h1 {
-        font-size: 2rem;
+        font-size: 1.8rem; /* Ajustado para que no se salga en pantallas pequeñas */
       }
 
       .grid-2 {
         grid-template-columns: 1fr;
+      }
+
+      /* --- NUEVOS AJUSTES MÓVIL (Mejora drástica con pocas líneas) --- */
+      .card {
+        padding: 1.25rem; /* Menos relleno = más espacio útil para el contenido */
+      }
+      
+      .total-box h2 {
+        font-size: 2rem; /* Evita que el número gigante se desborde */
+      }
+
+      .data-table th, 
+      .data-table td {
+        padding: 0.75rem 0.5rem; /* Celdas más compactas para mejor lectura */
+        font-size: 0.9rem;
+      }
+
+      .btn {
+        width: 100%; /* Botones de ancho completo, mucho más fáciles de pulsar con el dedo */
+        justify-content: center;
+        margin: 0.5rem 0;
+      }
+
+      .form-group input, 
+      .form-group select {
+        font-size: 16px; /* Truco clave: evita que el iPhone haga zoom automático al escribir */
       }
     }
   </style>
@@ -477,7 +503,6 @@
       </div>
     </div>
 
-    <!-- NUEVA SECCIÓN: Gestión de datos (Exportar/Importar) -->
     <div class="card">
       <h3>💾 Gestión de Datos (Copia de Seguridad)</h3>
       <div class="backup-info">
@@ -741,10 +766,6 @@
       });
     }
 
-    // =====================================================
-    // NUEVAS FUNCIONES: Exportar e Importar datos
-    // =====================================================
-
     function updateBackupStatus() {
       const expenses = JSON.parse(localStorage.getItem('med_expenses') || '[]');
       const statusEl = document.getElementById('backup-status');
@@ -794,19 +815,16 @@
         return;
       }
 
-      // Cabecera CSV
       let csv = 'Fecha,Concepto,Notas,Precio (€)\n';
       
       expenses.sort((a, b) => new Date(a.date) - new Date(b.date));
       
       expenses.forEach(exp => {
         const fecha = new Date(exp.date).toLocaleDateString('es-ES');
-        // Escapar comillas dobles en las notas para CSV
         const notas = (exp.notes || '').replace(/"/g, '""');
         csv += `${fecha},"${exp.item}","${notas}",${exp.price.toFixed(2)}\n`;
       });
 
-      // Añadir BOM para que Excel reconozca UTF-8 y las tildes
       const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       
@@ -830,7 +848,6 @@
         authenticateUser(() => {
           processImportFile(file);
         });
-        // Reset input para poder volver a seleccionar el mismo archivo si es necesario
         event.target.value = '';
         return;
       }
@@ -846,7 +863,6 @@
           const content = e.target.result;
           const parsed = JSON.parse(content);
           
-          // Soporta tanto el formato con metadatos como un array plano
           let importedExpenses;
           if (Array.isArray(parsed)) {
             importedExpenses = parsed;
@@ -856,7 +872,6 @@
             throw new Error('Formato no reconocido');
           }
 
-          // Validar estructura básica
           const valid = importedExpenses.every(exp => 
             exp.date && exp.item && typeof exp.price === 'number'
           );
@@ -873,12 +888,10 @@
           );
 
           if (mode) {
-            // Añadir (merge)
             const existing = JSON.parse(localStorage.getItem('med_expenses') || '[]');
             const existingIds = new Set(existing.map(e => e.id));
             let added = 0;
             importedExpenses.forEach(exp => {
-              // Evitar duplicados por ID, si no tiene ID o es duplicado, generar uno nuevo
               if (!exp.id || existingIds.has(exp.id)) {
                 exp.id = Date.now() + Math.floor(Math.random() * 10000) + added;
               }
@@ -888,8 +901,6 @@
             localStorage.setItem('med_expenses', JSON.stringify(existing));
             alert(`✅ Se han añadido ${added} registros correctamente.`);
           } else {
-            // Reemplazar
-            // Asegurar que todos tengan ID
             importedExpenses.forEach((exp, i) => {
               if (!exp.id) exp.id = Date.now() + i;
             });
@@ -921,7 +932,7 @@
       
       for (let i = 0; i < 15; i++) {
         const d = new Date(today);
-        d.setDate(d.getDate() - Math.floor(Math.random() * 120)); // Últimos ~4 meses
+        d.setDate(d.getDate() - Math.floor(Math.random() * 120));
         const dateStr = d.toISOString().split('T')[0];
         const randomItem = items[Math.floor(Math.random() * items.length)];
         const randomPrice = (Math.random() * 45 + 15).toFixed(2);
