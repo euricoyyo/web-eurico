@@ -1419,20 +1419,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-
-
 <script>
-    // 1. FUNCIÓN PRINCIPAL DE REGISTRO (Actualizada para el gráfico)
+    // 1. FUNCIÓN PRINCIPAL DE REGISTRO
     function toggleMed(medId, element) {
-        // Mantiene tu animación visual original de poner el check verde
+        // Añade o quita la animación visual del check verde
         element.classList.toggle('completed');
         
-        // Mantiene tu lógica de recordar si esta pastilla concreta está marcada
+        // Guarda de forma segura si ESTA pastilla concreta está marcada (Tu lógica original)
         const isCompleted = element.classList.contains('completed');
         localStorage.setItem(medId, isCompleted);
         
         // --- CONEXIÓN AUTOMÁTICA CON EL GRÁFICO ---
-        // Detecta el día de la semana actual basado en tu dispositivo
         const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
         const fechaActual = new Date();
         const nombreDiaHoy = diasSemana[fechaActual.getDay()];
@@ -1457,11 +1454,11 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('historialMedicacion', JSON.stringify(historialGrafica));
         // --- FIN DE LA CONEXIÓN ---
 
-        // Mantiene tu barra de progreso superior actualizada como siempre
+        // Actualiza la barra de progreso superior
         updateProgress();
     }
 
-    // 2. MANTIENE TU FUNCIÓN ORIGINAL PARA LA BARRA DE PROGRESO
+    // 2. FUNCIÓN PARA LA BARRA DE PROGRESO SUPERIOR
     function updateProgress() {
         const totalItems = document.querySelectorAll('.med-item').length;
         const completedItems = document.querySelectorAll('.med-item.completed').length;
@@ -1474,17 +1471,28 @@ document.addEventListener('DOMContentLoaded', () => {
         if (progressText) progressText.textContent = completedItems + '/' + totalItems;
     }
 
-    // 3. MANTIENE TU CARGADOR ORIGINAL AL ABRIR LA PÁGINA
+    // 3. CARGADOR AL ABRIR LA PÁGINA (CORREGIDO: Vuelve a recordar tus marcas fijas)
     window.onload = function() {
         document.querySelectorAll('.med-item').forEach(element => {
-            const medId = element.getAttribute('onclick').match(/'([^']+)'/)[1];
-            if (localStorage.getItem(medId) === 'true') {
-                element.classList.add('completed');
+            // Extrae correctamente el ID de la medicación de la función onclick (ej: 'pino-m')
+            const onclickAttr = element.getAttribute('onclick') || '';
+            const match = onclickAttr.match(/'([^']+)'/);
+            
+            if (match && match[1]) {
+                const medId = match[1];
+                // Si el navegador recuerda que estaba marcada como 'true', le vuelve a poner el check verde
+                if (localStorage.getItem(medId) === 'true') {
+                    element.classList.add('completed');
+                }
             }
         });
+        // Sincroniza la barra de progreso al cargar la página
         updateProgress();
     };
 </script>
+
+
+
 
   
 
