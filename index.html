@@ -1421,45 +1421,87 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-
-
-<!-- Coloca esto justo antes de la etiqueta </body> en tu index.html -->
 <script>
-    // Buscamos el formulario de index.html (asegúrate de que tu etiqueta <form> tenga id="miFormularioMedicación" o cámbialo aquí)
-    const formularioIndex = document.getElementById('miFormularioMedicación') || document.querySelector('form');
+    // 1. FUNCIÓN PRINCIPAL DE REGISTRO (Actualizada para el gráfico)
+    function toggleMed(medId, element) {
+        // Mantiene tu animación visual original de poner el check verde
+        element.classList.toggle('completed');
+        
+        // Mantiene tu lógica de recordar si esta pastilla concreta está marcada
+        const isCompleted = element.classList.contains('completed');
+        localStorage.setItem(medId, isCompleted);
+        
+        // --- CONEXIÓN AUTOMÁTICA CON EL GRÁFICO ---
+        // Detecta el día de la semana actual basado en tu dispositivo
+        const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+        const fechaActual = new Date();
+        const nombreDiaHoy = diasSemana[fechaActual.getDay()];
 
-    if (formularioIndex) {
-        formularioIndex.addEventListener('submit', function(event) {
-            // NOTA: Si tu formulario tiene contraseña, no rompas su lógica. 
-            // Esto simplemente guardará los datos en paralelo.
+        // Recupera el historial del gráfico o crea la semana a cero si es la primera vez
+        let historialGrafica = JSON.parse(localStorage.getItem('historialMedicacion')) || {
+            "Lunes": 0, "Martes": 0, "Miércoles": 0, "Jueves": 0, "Viernes": 0, "Sábado": 0, "Domingo": 0
+        };
 
-            // 1. Capturamos los elementos del formulario (Ajusta los ID si tus <select> o <input> se llaman diferente)
-            const selectDia = document.getElementById('id_de_tu_select_dia') || document.querySelector('select');
-            const inputTomas = document.getElementById('id_de_tu_input_tomas') || document.querySelector('input[type="number"]');
+        // Si marcas la pastilla, sumamos una toma al día de hoy en la gráfica
+        if (isCompleted) {
+            historialGrafica[nombreDiaHoy] += 1;
+        } 
+        // Si la desmarcas por error, restamos una toma para que la gráfica sea exacta
+        else {
+            if (historialGrafica[nombreDiaHoy] > 0) {
+                historialGrafica[nombreDiaHoy] -= 1;
+            }
+        }
 
-            if (selectDia && inputTomas) {
-                const diaSeleccionado = selectDia.value;
-                const cantidadTomas = parseInt(inputTomas.value) || 1;
+        // Guarda las tomas del gráfico en el almacenamiento del navegador
+        localStorage.setItem('historialMedicacion', JSON.stringify(historialGrafica));
+        // --- FIN DE LA CONEXIÓN ---
 
-                // 2. Recuperamos lo que ya esté guardado en el navegador, o creamos una semana vacía
-                let historial = JSON.parse(localStorage.getItem('historialMedicacion')) || {
-                    "Lunes": 0, "Martes": 0, "Miércoles": 0, "Jueves": 0, "Viernes": 0, "Sábado": 0, "Domingo": 0
-                };
+        // Mantiene tu barra de progreso superior actualizada como siempre
+        updateProgress();
+    }
 
-                // 3. Sumamos la nueva toma al día correspondiente
-                if (historial.hasOwnProperty(diaSeleccionado)) {
-                    historial[diaSeleccionado] += cantidadTomas;
-                } else {
-                    // Por si los días en tu index.html empiezan en minúscula o tienen otro formato
-                    historial[diaSeleccionado] = cantidadTomas;
-                }
+    // 2. MANTIENE TU FUNCIÓN ORIGINAL PARA LA BARRA DE PROGRESO
+    function updateProgress() {
+        const totalItems = document.querySelectorAll('.med-item').length;
+        const completedItems = document.querySelectorAll('.med-item.completed').length;
+        const progressPercent = totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
+        
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        
+        if (progressBar) progressBar.style.width = progressPercent + '%';
+        if (progressText) progressText.textContent = completedItems + '/' + totalItems;
+    }
 
-                // 4. Guardamos el resultado actualizado en la memoria del navegador
-                localStorage.setItem('historialMedicacion', JSON.stringify(historial));
+    // 3. MANTIENE TU CARGADOR ORIGINAL AL ABRIR LA PÁGINA
+    window.onload = function() {
+        document.querySelectorAll('.med-item').forEach(element => {
+            const medId = element.getAttribute('onclick').match(/'([^']+)'/)[1];
+            if (localStorage.getItem(medId) === 'true') {
+                element.classList.add('completed');
             }
         });
-    }
+        updateProgress();
+    };
 </script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
 
 
 
