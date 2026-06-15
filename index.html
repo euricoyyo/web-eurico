@@ -756,19 +756,31 @@
         <button id="accept-cookies">Entendido</button>
     </div>
 
-  <nav class="navbar">
+
+
+
+
+
+
+
+
+  
+
+    <nav class="navbar">
     <div class="nav-container">
       <a href="#" class="nav-logo" onclick="showPage('inicio')">🐕 Eurico</a>
       <button class="nav-toggle" onclick="toggleMenu()">☰</button>
       <ul class="nav-menu" id="navMenu">
-        <li><button onclick="showPage('inicio')" class="nav-link active" data-page="inicio">🏠 Inicio</button></li>
-        <li><button onclick="showPage('informe')" class="nav-link" data-page="informe">📋 Informe y Medicación</button></li>
-        <li><button onclick="showPage('contacto')" class="nav-link" data-page="contacto">💬 Contacto</button></li>
-        <li><a href="medicacion.html" class="nav-link" style="text-decoration: none; display: flex; align-items: center; background: none; border: none; padding: 0.5rem 1rem; cursor: pointer; color: inherit;">📊 Gráficas</a></li>
-
+        <li><a href="#" onclick="showPage('inicio'); return false;" class="nav-link active" data-page="inicio">🏠 Inicio</a></li>
+        <li><a href="#" onclick="showPage('informe'); return false;" class="nav-link" data-page="informe">📋 Informe y Medicación</a></li>
+        <li><a href="#" onclick="showPage('contacto'); return false;" class="nav-link" data-page="contacto">💬 Contacto</a></li>
+        <li><a href="medicacion.html" class="nav-link">📊 Gráficas</a></li>
+        <li><a href="gastos.html" class="nav-link">💰 Control de Gastos</a></li>
       </ul>
     </div>
   </nav>
+
+
 
   <div id="page-inicio" class="page active">
     <header>
