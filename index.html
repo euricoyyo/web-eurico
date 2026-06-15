@@ -1418,15 +1418,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-
 <script>
-    // 1. FUNCIÓN PRINCIPAL DE REGISTRO
+    // 1. FUNCIÓN PRINCIPAL DE REGISTRO (Corregida con la clase visual 'active')
     function toggleMed(medId, element) {
-        // Añade o quita la animación visual del check verde
-        element.classList.toggle('completed');
+        // Añade o quita el resaltado verde original de tu tarjeta
+        element.classList.toggle('active');
         
-        // Guarda de forma segura si ESTA pastilla concreta está marcada (Tu lógica original)
-        const isCompleted = element.classList.contains('completed');
+        // Guarda en el navegador si esta pastilla concreta está resaltada
+        const isCompleted = element.classList.contains('active');
         localStorage.setItem(medId, isCompleted);
         
         // --- CONEXIÓN AUTOMÁTICA CON EL GRÁFICO ---
@@ -1434,16 +1433,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const fechaActual = new Date();
         const nombreDiaHoy = diasSemana[fechaActual.getDay()];
 
-        // Recupera el historial del gráfico o crea la semana a cero si es la primera vez
+        // Recupera el historial del gráfico o crea la semana a cero
         let historialGrafica = JSON.parse(localStorage.getItem('historialMedicacion')) || {
             "Lunes": 0, "Martes": 0, "Miércoles": 0, "Jueves": 0, "Viernes": 0, "Sábado": 0, "Domingo": 0
         };
 
-        // Si marcas la pastilla, sumamos una toma al día de hoy en la gráfica
+        // Si la tarjeta queda resaltada (active), sumamos una toma al gráfico
         if (isCompleted) {
             historialGrafica[nombreDiaHoy] += 1;
         } 
-        // Si la desmarcas por error, restamos una toma para que la gráfica sea exacta
+        // Si la desmarcas (quita el resaltado), restamos una toma
         else {
             if (historialGrafica[nombreDiaHoy] > 0) {
                 historialGrafica[nombreDiaHoy] -= 1;
@@ -1454,14 +1453,14 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('historialMedicacion', JSON.stringify(historialGrafica));
         // --- FIN DE LA CONEXIÓN ---
 
-        // Actualiza la barra de progreso superior
+        // Actualiza tu barra de progreso superior
         updateProgress();
     }
 
-    // 2. FUNCIÓN PARA LA BARRA DE PROGRESO SUPERIOR
+    // 2. FUNCIÓN PARA LA BARRA DE PROGRESO SUPERIOR (Busca elementos .active)
     function updateProgress() {
         const totalItems = document.querySelectorAll('.med-item').length;
-        const completedItems = document.querySelectorAll('.med-item.completed').length;
+        const completedItems = document.querySelectorAll('.med-item.active').length;
         const progressPercent = totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
         
         const progressBar = document.getElementById('progress-bar');
@@ -1471,18 +1470,17 @@ document.addEventListener('DOMContentLoaded', () => {
         if (progressText) progressText.textContent = completedItems + '/' + totalItems;
     }
 
-    // 3. CARGADOR AL ABRIR LA PÁGINA (CORREGIDO: Vuelve a recordar tus marcas fijas)
+    // 3. CARGADOR AL ABRIR LA PÁGINA (Vuelve a resaltar tus marcas guardadas)
     window.onload = function() {
         document.querySelectorAll('.med-item').forEach(element => {
-            // Extrae correctamente el ID de la medicación de la función onclick (ej: 'pino-m')
             const onclickAttr = element.getAttribute('onclick') || '';
             const match = onclickAttr.match(/'([^']+)'/);
             
             if (match && match[1]) {
                 const medId = match[1];
-                // Si el navegador recuerda que estaba marcada como 'true', le vuelve a poner el check verde
+                // Si estaba guardada como completada, le vuelve a poner el resaltado verde 'active'
                 if (localStorage.getItem(medId) === 'true') {
-                    element.classList.add('completed');
+                    element.classList.add('active');
                 }
             }
         });
@@ -1490,6 +1488,12 @@ document.addEventListener('DOMContentLoaded', () => {
         updateProgress();
     };
 </script>
+
+
+        
+
+
+
 
 
 
