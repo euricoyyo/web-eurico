@@ -1,106 +1,644 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Historial de Medicación - Eurico</title>
-    <style>
-        :root {
-            --primary: #3498db;
-            --primary-dark: #2980b9;
-            --bg-color: #f5f7fb;
-            --card-bg: #ffffff;
-            --text-main: #2c3e50;
-            --text-light: #7f8c8d;
-            --border-radius: 12px;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eurico - Gráficas de Medicación</title>
+  <meta name="description" content="Seguimiento cardiológico de Eurico, Cocker Spaniel Inglés. Gráficas de medicación.">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --primary: #90a3b1;
+      --primary-light: #e8f5e9;
+      --secondary: #f57c00;
+      --bg: #f8f9fa;
+      --card-bg: #ffffff;
+      --text: #212121;
+      --text-light: #757575;
+      --danger: #d32f2f;
+      --border: #e0e0e0;
+      --radius: 12px;
+      --shadow: 0 4px 6px rgba(0,0,0,0.05);
+      --header-height: 70px;
+    }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-        }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: var(--header-height);
+    }
 
-        .container {
-            width: 100%;
-            max-width: 800px;
-            background: var(--card-bg);
-            padding: 25px;
-            border-radius: var(--border-radius);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            box-sizing: border-box;
-            text-align: center;
-        }
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding-top: var(--header-height);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
 
-        .header-actions {
-            display: flex;
-            justify-content: flex-start;
-            margin-bottom: 20px;
-        }
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      z-index: 1000;
+      height: var(--header-height);
+    }
 
-        .back-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-            color: white;
-            background-color: var(--primary);
-            padding: 10px 16px;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            transition: background-color 0.2s;
-        }
+    .nav-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
-        .back-btn:hover {
-            background-color: var(--primary-dark);
-        }
+    .nav-logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
 
-        h1 {
-            color: var(--text-main);
-            margin: 10px 0 5px 0;
-            font-size: 1.8rem;
-        }
+    .nav-menu {
+      display: flex;
+      list-style: none;
+      gap: 2rem;
+    }
 
-        .subtitle {
-            color: var(--text-light);
-            margin-bottom: 40px;
-            font-size: 1rem;
-        }
+    .nav-link {
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      border: none;
+      background: none;
+      font-size: 1rem;
+    }
 
-        .info-box {
-            background-color: #e8f4fd;
-            border-left: 5px solid var(--primary);
-            padding: 15px;
-            border-radius: 4px;
-            display: inline-block;
-            text-align: left;
-            max-width: 90%;
-            margin-top: 20px;
-        }
-    </style>
+    .nav-link:hover,
+    .nav-link.active {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--primary);
+    }
+
+    .page {
+      display: none;
+      flex: 1;
+    }
+
+    .page.active {
+      display: block;
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, #1b5e20 100%);
+      color: white;
+      padding: 3rem 0;
+    }
+
+    .header-content {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      display: grid;
+      grid-template-columns: 350px 1fr;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .photo-container {
+      position: relative;
+      text-align: center;
+    }
+
+    .main-photo {
+      width: 100%;
+      max-width: 350px;
+      height: 400px;
+      object-fit: cover;
+      border-radius: var(--radius);
+      border: 5px solid white;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      background-color: #ddd;
+    }
+
+    .photo-badge {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: var(--secondary);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .header-info h1 {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+      font-weight: 800;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .info-item {
+      background: rgba(255,255,255,0.15);
+      padding: 1rem;
+      border-radius: 8px;
+      border-left: 4px solid var(--secondary);
+    }
+
+    .info-item label {
+      display: block;
+      font-size: 0.85rem;
+      opacity: 0.9;
+      margin-bottom: 0.25rem;
+    }
+
+    .info-item strong {
+      font-size: 1.1rem;
+      display: block;
+    }
+
+    section {
+      padding: 4rem 0;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    .card h3 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding-bottom: 1rem;
+      border-bottom: 3px solid var(--primary-light);
+    }
+
+    .chart-container {
+      position: relative;
+      height: 400px;
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 2rem;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      margin: 0.5rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 1rem;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+
+    .btn-email {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+
+    footer {
+      background: var(--text);
+      color: white;
+      text-align: center;
+      padding: 3rem 1rem;
+      margin-top: 4rem;
+    }
+
+    footer a {
+      color: var(--secondary);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .nav-menu {
+        position: fixed;
+        left: -100%;
+        top: var(--header-height);
+        flex-direction: column;
+        background: white;
+        width: 100%;
+        text-align: center;
+        transition: 0.3s;
+        box-shadow: 0 10px 27px rgba(0,0,0,0.05);
+        padding: 2rem 0;
+        gap: 1rem;
+      }
+
+      .nav-menu.active {
+        left: 0;
+      }
+
+      .nav-toggle {
+        display: block;
+      }
+
+      .header-content {
+        grid-template-columns: 1fr;
+      }
+
+      .photo-container {
+        order: -1;
+      }
+
+      .main-photo {
+        max-width: 280px;
+        height: 320px;
+        margin: 0 auto;
+        display: block;
+      }
+
+      .header-info h1 {
+        font-size: 2rem;
+        text-align: center;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header-actions">
-        <a href="index.html" class="back-btn">⬅️ Volver al Panel</a>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">🐕 Eurico</a>
+      <button class="nav-toggle" onclick="toggleMenu()">☰</button>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="index.html" class="nav-link">🏠 Inicio</a></li>
+        <li><a href="index.html#informe" class="nav-link">📋 Informe y Medicación</a></li>
+        <li><a href="index.html#contacto" class="nav-link">💬 Contacto</a></li>
+        <li><button onclick="showPage('graficas')" class="nav-link active" data-page="graficas">📊 Gráficas</button></li>
+      </ul>
     </div>
-    
-    <h1>📊 Registro Gráfico de Medicación</h1>
-    <p class="subtitle">Sección en mantenimiento técnico.</p>
-    
-    <div class="info-box">
-        <p style="margin: 0; font-weight: bold; color: #2c3e50;">🐾 Panel de Control Activo</p>
-        <p style="margin: 5px 0 0 0; font-size: 0.9rem; color: #555;">
-            Las tomas diarias se siguen registrando de forma segura bajo tu contraseña en la página principal.
-        </p>
-    </div>
-</div>
+  </nav>
 
+  <div id="page-graficas" class="page active">
+    <header>
+      <div class="header-content">
+        <div class="photo-container">
+          <div class="main-photo" style="display: flex; align-items: center; justify-content: center; font-size: 4rem;">📊</div>
+          <div class="photo-badge">📈 Seguimiento</div>
+        </div>
+        
+        <div class="header-info">
+          <h1>📊 Gráficas de Medicación</h1>
+          <p style="font-size: 1.2rem; margin-bottom: 1.5rem; opacity: 0.95;">Control visual del tratamiento de Eurico</p>
+          
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Medicamentos diarios</label>
+              <strong>5 tomas</strong>
+            </div>
+            <div class="info-item">
+              <label>Objetivo</label>
+              <strong>100% cumplimiento</strong>
+            </div>
+            <div class="info-item">
+              <label>Última actualización</label>
+              <strong id="last-update">Hoy</strong>
+            </div>
+            <div class="info-item">
+              <label>Estado</label>
+              <strong id="status-text">Registrando...</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section>
+      <h2 class="section-title">📈 Progreso Diario (Últimos 7 días)</h2>
+      <div class="card">
+        <p style="color: var(--text-light); margin-bottom: 1.5rem;">Muestra el número de dosis administradas correctamente cada día. El objetivo es alcanzar las 5 tomas diarias (Pimobendan x2, Furosemida x2, Espironolactona x1).</p>
+        <div class="chart-container">
+          <canvas id="progressChart"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>🥧 Distribución de Medicamentos</h3>
+        <p style="color: var(--text-light); margin-bottom: 1.5rem;">Total de tomas registradas por tipo de medicamento en todo el historial guardado.</p>
+        <div class="chart-container" style="max-width: 500px; margin: 0 auto;">
+          <canvas id="distributionChart"></canvas>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 2rem; padding: 2rem; background: var(--card-bg); border-radius: var(--radius); border: 1px solid var(--border);">
+        <h3 style="margin-bottom: 1rem; color: var(--text);">⚙️ Gestión de Datos</h3>
+        <p style="color: var(--text-light); margin-bottom: 1.5rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+          Los datos se guardan localmente en tu navegador. Puedes generar datos de ejemplo para visualizar las gráficas o borrar el historial si es necesario.
+        </p>
+        <button class="btn btn-email" onclick="generateSampleData()">🔄 Generar datos de ejemplo</button>
+        <button class="btn btn-danger" onclick="clearData()">🗑️ Borrar historial</button>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <div style="max-width: 1100px; margin: 0 auto;">
+      <p style="font-size: 1.2rem; margin-bottom: 1rem;">🏥 Clínicas Veterinarias</p>
+      
+      <div style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.2);">
+        <p style="font-weight: 600; margin-bottom: 0.5rem;">Cardiología Veterinaria Asturias</p>
+        <p style="margin-bottom: 0.5rem;">Dra. M.ª José Capilla Tatay | Avd. del Llano, 61, Gijón</p>
+        <p><a href="tel:984004492">📞 984 00 44 92</a></p>
+        <p><a href="https://www.ecovetpets.com/cardiologia-veterinaria-asturias/" target="_blank">🌐 www.ecovetpets.com</a></p>
+      </div>
+      
+      <div style="margin-bottom: 1.5rem;">
+        <p style="font-weight: 600; margin-bottom: 0.5rem;">Clínica Veterinaria Sabuvet</p>
+        <p style="margin-bottom: 0.5rem;">Calle de la Cámara, 56, 33401 Avilés, Asturias</p>
+        <p style="margin-bottom: 0.5rem;">
+          <a href="tel:985522827">📞 985 52 28 27</a> | 
+          <a href="tel:684612466">🚨 Urgencias: 684 612 466</a>
+        </p>
+        <p><a href="https://www.sabuvet.com/" target="_blank">🌐 www.sabuvet.com</a></p>
+      </div>
+      
+      <p style="opacity: 0.8; font-size: 0.9rem; margin-top: 2rem;">© 2026 Eurico - Cocker Spaniel Inglés</p>
+      <p style="opacity: 0.7; font-size: 0.85rem; margin-top: 0.5rem;">Creado con ❤️ por Amador Díaz</p>
+    </div>
+  </footer>
+
+  <script>
+    const medsList = ['pimo-m', 'pimo-t', 'furo-m', 'furo-t', 'espi'];
+    const medNames = {
+      'pimo-m': 'Pimobendan (Mañana)',
+      'pimo-t': 'Pimobendan (Tarde)',
+      'furo-m': 'Furosemida (Mañana)',
+      'furo-t': 'Furosemida (Tarde)',
+      'espi': 'Espironolactona'
+    };
+
+    let progressChartInstance = null;
+    let distributionChartInstance = null;
+
+    function toggleMenu() {
+      const navMenu = document.getElementById('navMenu');
+      navMenu.classList.toggle('active');
+    }
+
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+      });
+      document.getElementById('page-' + pageId).classList.add('active');
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('data-page') === pageId) {
+          link.classList.add('active');
+        }
+      });
+      document.getElementById('navMenu').classList.remove('active');
+      window.scrollTo(0, 0);
+    }
+
+    function getHistory() {
+      return JSON.parse(localStorage.getItem('med_history') || '[]');
+    }
+
+    function saveHistory(history) {
+      localStorage.setItem('med_history', JSON.stringify(history));
+    }
+
+    function updateCharts() {
+      const history = getHistory();
+      const today = new Date();
+      
+      // Preparar datos de los últimos 7 días
+      const dates = [];
+      const dataProgress = [];
+      
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(today);
+        d.setDate(d.getDate() - i);
+        const dateStr = d.toISOString().split('T')[0];
+        dates.push(d.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' }));
+        
+        const count = history.filter(h => h.date === dateStr && medsList.includes(h.medication)).length;
+        dataProgress.push(count);
+      }
+
+      // Actualizar texto de estado
+      const todayStr = today.toISOString().split('T')[0];
+      const todayCount = history.filter(h => h.date === todayStr && medsList.includes(h.medication)).length;
+      document.getElementById('last-update').textContent = today.toLocaleDateString('es-ES');
+      document.getElementById('status-text').textContent = `${todayCount}/5 tomas hoy`;
+
+      // Gráfico de Progreso
+      const ctx1 = document.getElementById('progressChart').getContext('2d');
+      if (progressChartInstance) {
+        progressChartInstance.destroy();
+      }
+      
+      progressChartInstance = new Chart(ctx1, {
+        type: 'bar',
+        data: {
+          labels: dates,
+          datasets: [{
+            label: 'Dosis administradas',
+            data: dataProgress,
+            backgroundColor: dataProgress.map(val => val === 5 ? '#1b5e20' : '#90a3b1'),
+            borderColor: '#1b5e20',
+            borderWidth: 1,
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return `Tomas: ${context.raw} de 5`;
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 5,
+              ticks: { stepSize: 1 },
+              grid: { color: '#e0e0e0' }
+            },
+            x: {
+              grid: { display: false }
+            }
+          }
+        }
+      });
+
+      // Gráfico de Distribución
+      const medCounts = {};
+      medsList.forEach(m => medCounts[m] = 0);
+      history.forEach(h => {
+        if (medCounts[h.medication] !== undefined) {
+          medCounts[h.medication]++;
+        }
+      });
+
+      const ctx2 = document.getElementById('distributionChart').getContext('2d');
+      if (distributionChartInstance) {
+        distributionChartInstance.destroy();
+      }
+
+      distributionChartInstance = new Chart(ctx2, {
+        type: 'doughnut',
+        data: {
+          labels: Object.values(medNames),
+          datasets: [{
+            data: Object.values(medCounts),
+            backgroundColor: ['#90a3b1', '#1b5e20', '#f57c00', '#e65100', '#7dabcd'],
+            borderWidth: 2,
+            borderColor: '#ffffff'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                padding: 15,
+                usePointStyle: true,
+                font: { size: 12 }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function generateSampleData() {
+      const history = [];
+      const today = new Date();
+      
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(today);
+        d.setDate(d.getDate() - i);
+        const dateStr = d.toISOString().split('T')[0];
+        
+        // Generar entre 3 y 5 tomas aleatorias por día
+        const numMeds = Math.floor(Math.random() * 3) + 3;
+        const shuffled = [...medsList].sort(() => 0.5 - Math.random());
+        const selected = shuffled.slice(0, numMeds);
+        
+        selected.forEach(med => {
+          history.push({ date: dateStr, medication: med });
+        });
+      }
+      
+      saveHistory(history);
+      updateCharts();
+      alert('✅ Datos de ejemplo generados correctamente.');
+    }
+
+    function clearData() {
+      if (confirm('¿Estás seguro de que quieres borrar todo el historial de medicación? Esta acción no se puede deshacer.')) {
+        localStorage.removeItem('med_history');
+        updateCharts();
+        alert('🗑️ Historial borrado correctamente.');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateCharts();
+    });
+  </script>
 </body>
 </html>
