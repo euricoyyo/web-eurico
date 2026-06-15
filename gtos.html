@@ -241,6 +241,11 @@
       color: white;
     }
 
+    .btn-info {
+      background: #1565c0;
+      color: white;
+    }
+
     .data-table {
       width: 100%;
       border-collapse: collapse;
@@ -287,6 +292,24 @@
     .total-box p {
       font-size: 1.1rem;
       opacity: 0.9;
+    }
+
+    .backup-info {
+      background: var(--primary-light);
+      border-left: 4px solid var(--primary);
+      padding: 1rem 1.25rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    .backup-info strong {
+      color: var(--primary);
+    }
+
+    #import-file-input {
+      display: none;
     }
 
     footer {
@@ -454,6 +477,23 @@
       </div>
     </div>
 
+    <!-- NUEVA SECCIÓN: Gestión de datos (Exportar/Importar) -->
+    <div class="card">
+      <h3>💾 Gestión de Datos (Copia de Seguridad)</h3>
+      <div class="backup-info">
+        <strong>ℹ️ Tus datos se guardan automáticamente</strong> en este navegador (localStorage). 
+        Sin embargo, si borras la caché o cambias de dispositivo, podrías perderlos. 
+        Usa los botones de abajo para crear copias de seguridad o restaurarlas.
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+        <button class="btn btn-info" onclick="exportDataJSON()">📤 Exportar datos (JSON)</button>
+        <button class="btn btn-info" onclick="exportDataCSV()">📊 Exportar datos (CSV / Excel)</button>
+        <button class="btn btn-secondary" onclick="document.getElementById('import-file-input').click()">📥 Importar datos (JSON)</button>
+        <input type="file" id="import-file-input" accept=".json" onchange="importDataJSON(event)">
+      </div>
+      <p id="backup-status" style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-light);"></p>
+    </div>
+
     <div style="text-align: center; margin-top: 2rem;">
       <button class="btn btn-primary" onclick="generateSampleData()">🔄 Generar datos de ejemplo</button>
       <button class="btn btn-danger" onclick="clearAllData()">🗑️ Borrar todo el historial</button>
@@ -539,6 +579,7 @@
       });
       
       localStorage.setItem('med_expenses', JSON.stringify(expenses));
+      updateBackupStatus();
       alert('✅ Gasto registrado correctamente.');
       hideForm();
       renderAll();
@@ -553,6 +594,7 @@
         let expenses = JSON.parse(localStorage.getItem('med_expenses') || '[]');
         expenses = expenses.filter(e => e.id !== id);
         localStorage.setItem('med_expenses', JSON.stringify(expenses));
+        updateBackupStatus();
         renderAll();
       }
     }
@@ -699,6 +741,174 @@
       });
     }
 
+    // =====================================================
+    // NUEVAS FUNCIONES: Exportar e Importar datos
+    // =====================================================
+
+    function updateBackupStatus() {
+      const expenses = JSON.parse(localStorage.getItem('med_expenses') || '[]');
+      const statusEl = document.getElementById('backup-status');
+      if (expenses.length === 0) {
+        statusEl.textContent = '📭 No hay datos guardados en el navegador.';
+      } else {
+        const lastModified = localStorage.getItem('med_expenses_last_modified') || 'desconocido';
+        statusEl.innerHTML = `✅ <strong>${expenses.length}</strong> gasto(s) guardado(s) en este navegador. Última modificación: ${lastModified}`;
+      }
+    }
+
+    function exportDataJSON() {
+      const expenses = JSON.parse(localStorage.getItem('med_expenses') || '[]');
+      if (expenses.length === 0) {
+        alert('⚠️ No hay datos para exportar.');
+        return;
+      }
+
+      const backup = {
+        app: 'Eurico - Control de Gastos',
+        version: '1.0',
+        exportDate: new Date().toISOString(),
+        totalRecords: expenses.length,
+        data: expenses
+      };
+
+      const jsonStr = JSON.stringify(backup, null, 2);
+      const blob = new Blob([jsonStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      
+      const a = document.createElement('a');
+      const dateStr = new Date().toISOString().split('T')[0];
+      a.href = url;
+      a.download = `eurico-gastos-backup-${dateStr}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      alert('✅ Archivo de respaldo descargado correctamente.\n\nGuárdalo en un lugar seguro (por ejemplo, en tu carpeta de documentos o en la nube).');
+    }
+
+    function exportDataCSV() {
+      const expenses = JSON.parse(localStorage.getItem('med_expenses') || '[]');
+      if (expenses.length === 0) {
+        alert('⚠️ No hay datos para exportar.');
+        return;
+      }
+
+      // Cabecera CSV
+      let csv = 'Fecha,Concepto,Notas,Precio (€)\n';
+      
+      expenses.sort((a, b) => new Date(a.date) - new Date(b.date));
+      
+      expenses.forEach(exp => {
+        const fecha = new Date(exp.date).toLocaleDateString('es-ES');
+        // Escapar comillas dobles en las notas para CSV
+        const notas = (exp.notes || '').replace(/"/g, '""');
+        csv += `${fecha},"${exp.item}","${notas}",${exp.price.toFixed(2)}\n`;
+      });
+
+      // Añadir BOM para que Excel reconozca UTF-8 y las tildes
+      const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      
+      const a = document.createElement('a');
+      const dateStr = new Date().toISOString().split('T')[0];
+      a.href = url;
+      a.download = `eurico-gastos-${dateStr}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      alert('✅ Archivo CSV descargado.\n\nPuedes abrirlo con Excel, Google Sheets o cualquier hoja de cálculo.');
+    }
+
+    function importDataJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      if (!isAuthorized) {
+        authenticateUser(() => {
+          processImportFile(file);
+        });
+        // Reset input para poder volver a seleccionar el mismo archivo si es necesario
+        event.target.value = '';
+        return;
+      }
+
+      processImportFile(file);
+      event.target.value = '';
+    }
+
+    function processImportFile(file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const content = e.target.result;
+          const parsed = JSON.parse(content);
+          
+          // Soporta tanto el formato con metadatos como un array plano
+          let importedExpenses;
+          if (Array.isArray(parsed)) {
+            importedExpenses = parsed;
+          } else if (parsed.data && Array.isArray(parsed.data)) {
+            importedExpenses = parsed.data;
+          } else {
+            throw new Error('Formato no reconocido');
+          }
+
+          // Validar estructura básica
+          const valid = importedExpenses.every(exp => 
+            exp.date && exp.item && typeof exp.price === 'number'
+          );
+
+          if (!valid) {
+            alert('❌ El archivo no tiene un formato válido de gastos de Eurico.');
+            return;
+          }
+
+          const mode = confirm(
+            `📥 Se han encontrado ${importedExpenses.length} registros en el archivo.\n\n` +
+            `Pulsa "Aceptar" para AÑADIR estos registros a los existentes.\n` +
+            `Pulsa "Cancelar" para REEMPLAZAR todos los datos actuales.`
+          );
+
+          if (mode) {
+            // Añadir (merge)
+            const existing = JSON.parse(localStorage.getItem('med_expenses') || '[]');
+            const existingIds = new Set(existing.map(e => e.id));
+            let added = 0;
+            importedExpenses.forEach(exp => {
+              // Evitar duplicados por ID, si no tiene ID o es duplicado, generar uno nuevo
+              if (!exp.id || existingIds.has(exp.id)) {
+                exp.id = Date.now() + Math.floor(Math.random() * 10000) + added;
+              }
+              existing.push(exp);
+              added++;
+            });
+            localStorage.setItem('med_expenses', JSON.stringify(existing));
+            alert(`✅ Se han añadido ${added} registros correctamente.`);
+          } else {
+            // Reemplazar
+            // Asegurar que todos tengan ID
+            importedExpenses.forEach((exp, i) => {
+              if (!exp.id) exp.id = Date.now() + i;
+            });
+            localStorage.setItem('med_expenses', JSON.stringify(importedExpenses));
+            alert(`✅ Datos reemplazados correctamente. ${importedExpenses.length} registros importados.`);
+          }
+
+          localStorage.setItem('med_expenses_last_modified', new Date().toLocaleString('es-ES'));
+          updateBackupStatus();
+          renderAll();
+
+        } catch (err) {
+          alert('❌ Error al leer el archivo. Asegúrate de que es un archivo JSON válido exportado desde esta aplicación.\n\nDetalle: ' + err.message);
+          console.error(err);
+        }
+      };
+      reader.readAsText(file);
+    }
+
     function generateSampleData() {
       if (!isAuthorized) {
         authenticateUser(() => generateSampleData());
@@ -726,6 +936,8 @@
       }
       
       localStorage.setItem('med_expenses', JSON.stringify(expenses));
+      localStorage.setItem('med_expenses_last_modified', new Date().toLocaleString('es-ES'));
+      updateBackupStatus();
       renderAll();
       alert('✅ Datos de ejemplo generados correctamente.');
     }
@@ -737,15 +949,18 @@
       }
       if (confirm('⚠️ ¿Estás seguro de que quieres BORRAR TODO el historial de gastos? Esta acción no se puede deshacer.')) {
         localStorage.removeItem('med_expenses');
+        localStorage.removeItem('med_expenses_last_modified');
+        updateBackupStatus();
         renderAll();
         alert('🗑️ Historial de gastos borrado completamente.');
       }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+      localStorage.setItem('med_expenses_last_modified', new Date().toLocaleString('es-ES'));
+      updateBackupStatus();
       renderAll();
     });
   </script>
 </body>
 </html>
-
