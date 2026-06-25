@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Eurico - Gráficas de Medicación</title>
-  <meta name="description" content="Seguimiento cardiológico de Eurico, Cocker Spaniel Inglés. Gráficas de medicación.">
+  <title>Eurico - Seguimiento Cardiológico</title>
+  <meta name="description" content="Seguimiento cardiológico de Eurico. Gráficas de evolución ecocardiográfica y medicación.">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
@@ -16,6 +16,8 @@
       --text: #212121;
       --text-light: #757575;
       --danger: #d32f2f;
+      --warning: #f57c00;
+      --success: #2e7d32;
       --border: #e0e0e0;
       --radius: 12px;
       --shadow: 0 4px 6px rgba(0,0,0,0.05);
@@ -237,6 +239,105 @@
       margin-bottom: 1rem;
     }
 
+    .chart-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .chart-row .card {
+      margin-bottom: 0;
+    }
+
+    .chart-row .chart-container {
+      height: 320px;
+    }
+
+    .evolution-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    .evolution-table th, .evolution-table td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .evolution-table th {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .evolution-table tr:hover {
+      background: #f5f5f5;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .badge-success { background: #e8f5e9; color: var(--success); }
+    .badge-danger { background: #ffebee; color: var(--danger); }
+    .badge-warning { background: #fff3e0; color: var(--warning); }
+    .badge-info { background: #e3f2fd; color: #1565c0; }
+
+    .med-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--primary);
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .med-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .med-info h4 {
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+
+    .med-info p {
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    .med-dose {
+      text-align: right;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .med-dose small {
+      display: block;
+      font-weight: 400;
+      color: var(--text-light);
+      font-size: 0.8rem;
+    }
+
     .btn {
       display: inline-flex;
       align-items: center;
@@ -334,6 +435,19 @@
       .section-title {
         font-size: 1.5rem;
       }
+
+      .chart-row {
+        grid-template-columns: 1fr;
+      }
+
+      .med-card {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .med-dose {
+        text-align: center;
+      }
     }
 
     @keyframes fadeIn {
@@ -350,60 +464,47 @@
 </head>
 <body>
 
-
-
 <nav class="navbar">
     <div class="nav-container">
-      <a href="#" class="nav-logo" onclick="showPage('inicio')">🐕 Eurico</a>
+      <a href="#" class="nav-logo" onclick="showPage('graficas')">🐕 Eurico</a>
       <button class="nav-toggle" onclick="toggleMenu()">☰</button>
       <ul class="nav-menu" id="navMenu">
-        <li><a href="#" onclick="showPage('inicio'); return false;" class="nav-link active" data-page="inicio">🏠 Inicio</a></li>
-        <li><a href="#" onclick="showPage('informe'); return false;" class="nav-link" data-page="informe">📋 Informe y Medicación</a></li>
-        <li><a href="#" onclick="showPage('contacto'); return false;" class="nav-link" data-page="contacto">💬 Contacto</a></li>
-        <li><a href="medicacion.html" class="nav-link">📊 Gráficas</a></li>
+        <li><a href="index.html" class="nav-link">🏠 Inicio</a></li>
+        <li><a href="informe.html" class="nav-link">📋 Informe y Medicación</a></li>
+        <li><a href="#" onclick="showPage('graficas'); return false;" class="nav-link active" data-page="graficas">📊 Gráficas</a></li>
         <li><a href="gtos.html" class="nav-link">💰 Control de Gastos</a></li>
       </ul>
     </div>
   </nav>
-
-
-
-
-
-
-
-
-
-  
 
   <div id="page-graficas" class="page active">
     <header>
       <div class="header-content">
         <div class="photo-container">
           <div class="main-photo" style="display: flex; align-items: center; justify-content: center; font-size: 4rem;">📊</div>
-          <div class="photo-badge">📈 Seguimiento</div>
+          <div class="photo-badge">📈 CMD B2/c</div>
         </div>
         
         <div class="header-info">
-          <h1>📊 Gráficas de Medicación</h1>
-          <p style="font-size: 1.2rem; margin-bottom: 1.5rem; opacity: 0.95;">Control visual del tratamiento de Eurico</p>
+          <h1>📊 Seguimiento Cardiológico</h1>
+          <p style="font-size: 1.2rem; margin-bottom: 1.5rem; opacity: 0.95;">Evolución ecocardiográfica de Eurico · Informe 25/06/2026</p>
           
           <div class="info-grid">
             <div class="info-item">
-              <label>Medicamentos diarios</label>
-              <strong>5 tomas</strong>
+              <label>Diagnóstico</label>
+              <strong>CMD Estadio B2/c</strong>
             </div>
             <div class="info-item">
-              <label>Objetivo</label>
-              <strong>100% cumplimiento</strong>
+              <label>Peso actual</label>
+              <strong>14,7 kg</strong>
             </div>
             <div class="info-item">
-              <label>Última actualización</label>
-              <strong id="last-update">Hoy</strong>
+              <label>Fracción Acortamiento</label>
+              <strong>18% (Mine 1)</strong>
             </div>
             <div class="info-item">
-              <label>Estado</label>
-              <strong id="status-text">Registrando...</strong>
+              <label>Próxima revisión</label>
+              <strong>Julio 2026</strong>
             </div>
           </div>
         </div>
@@ -411,30 +512,225 @@
     </header>
 
     <section>
-      <h2 class="section-title">📈 Progreso Diario (Últimos 7 días)</h2>
+      <h2 class="section-title">📉 Evolución de la Función Cardíaca</h2>
+      
+      <div class="chart-row">
+        <div class="card">
+          <h3>💓 Fracción de Acortamiento (%)</h3>
+          <p style="color: var(--text-light); margin-bottom: 1rem; font-size: 0.9rem;">Indicador principal de la contractilidad. Valor de referencia: 30-46%.</p>
+          <div class="chart-container">
+            <canvas id="faChart"></canvas>
+          </div>
+        </div>
+        
+        <div class="card">
+          <h3>⚖️ Peso Corporal (kg)</h3>
+          <p style="color: var(--text-light); margin-bottom: 1rem; font-size: 0.9rem;">Control de peso entre revisiones.</p>
+          <div class="chart-container">
+            <canvas id="pesoChart"></canvas>
+          </div>
+        </div>
+      </div>
+
       <div class="card">
-        <p style="color: var(--text-light); margin-bottom: 1.5rem;">Muestra el número de dosis administradas correctamente cada día. El objetivo es alcanzar las 5 tomas diarias (Pimobendan x2, Furosemida x2, Espironolactona x1).</p>
+        <h3>📐 Volúmenes Ventriculares Indexados (ml/m²)</h3>
+        <p style="color: var(--text-light); margin-bottom: 1rem;">EDVI: Volumen telediastólico · ESVI: Volumen telesistólico. EDVI >100 ml/m² indica fallo miocárdico grave.</p>
         <div class="chart-container">
-          <canvas id="progressChart"></canvas>
+          <canvas id="volChart"></canvas>
         </div>
       </div>
 
+      <h2 class="section-title" style="margin-top: 3rem;">🔬 Evolución de Parámetros Ecocardiográficos</h2>
+
+      <div class="chart-row">
+        <div class="card">
+          <h3>🫀 Relación Aurícula/Aorta (Ai/Ao)</h3>
+          <p style="color: var(--text-light); margin-bottom: 1rem; font-size: 0.9rem;">Indicador de distensión auricular. Ref: <2.4 (Cornell).</p>
+          <div class="chart-container">
+            <canvas id="aiaoChart"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>🌊 Velocidad E (m/s)</h3>
+          <p style="color: var(--text-light); margin-bottom: 1rem; font-size: 0.9rem;">Flujo transmitral. Ref: <1.2 m/s.</p>
+          <div class="chart-container">
+            <canvas id="velEChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-row">
+        <div class="card">
+          <h3>🔴 Insuficiencia Mitral (m/s)</h3>
+          <p style="color: var(--text-light); margin-bottom: 1rem; font-size: 0.9rem;">Velocidad del jet de regurgitación mitral.</p>
+          <div class="chart-container">
+            <canvas id="insfMChart"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>🔵 Insuficiencia Tricuspídea (m/s)</h3>
+          <p style="color: var(--text-light); margin-bottom: 1rem; font-size: 0.9rem;">Estimación de presión pulmonar. Ref: <3.4 m/s.</p>
+          <div class="chart-container">
+            <canvas id="insfTChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="section-title" style="margin-top: 3rem;">📋 Tabla Comparativa de Valores</h2>
       <div class="card">
-        <h3>🥧 Distribución de Medicamentos</h3>
-        <p style="color: var(--text-light); margin-bottom: 1.5rem;">Total de tomas registradas por tipo de medicamento en todo el historial guardado.</p>
-        <div class="chart-container" style="max-width: 500px; margin: 0 auto;">
-          <canvas id="distributionChart"></canvas>
+        <table class="evolution-table">
+          <thead>
+            <tr>
+              <th>Parámetro</th>
+              <th>27/05/2026</th>
+              <th>25/06/2026</th>
+              <th>Referencia</th>
+              <th>Evolución</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Peso (kg)</strong></td>
+              <td>13,8</td>
+              <td>14,7</td>
+              <td>—</td>
+              <td><span class="badge badge-warning">+0,9 kg</span></td>
+            </tr>
+            <tr>
+              <td><strong>Fracción Acortamiento (%)</strong></td>
+              <td>31%</td>
+              <td>18%</td>
+              <td>30-46%</td>
+              <td><span class="badge badge-danger">↓ Empeora</span></td>
+            </tr>
+            <tr>
+              <td><strong>LVId normalizado</strong></td>
+              <td>2,69</td>
+              <td>2,45</td>
+              <td>1,27-1,85</td>
+              <td><span class="badge badge-success">↓ Mejora</span></td>
+            </tr>
+            <tr>
+              <td><strong>EDVI (ml/m²)</strong></td>
+              <td>288,9</td>
+              <td>154,3</td>
+              <td><100</td>
+              <td><span class="badge badge-success">↓ Mejora</span></td>
+            </tr>
+            <tr>
+              <td><strong>ESVI (ml/m²)</strong></td>
+              <td>123,6</td>
+              <td>87,0</td>
+              <td><30</td>
+              <td><span class="badge badge-success">↓ Mejora</span></td>
+            </tr>
+            <tr>
+              <td><strong>Ai/Ao</strong></td>
+              <td>2,51</td>
+              <td>2,62</td>
+              <td><2,4</td>
+              <td><span class="badge badge-warning">↑ Leve empeora</span></td>
+            </tr>
+            <tr>
+              <td><strong>Ai normalizado</strong></td>
+              <td>22,6</td>
+              <td>21,2</td>
+              <td><15,7</td>
+              <td><span class="badge badge-success">↓ Mejora</span></td>
+            </tr>
+            <tr>
+              <td><strong>Relación E/A (Izq)</strong></td>
+              <td>2,85 E>>A</td>
+              <td>2,17 E>A</td>
+              <td><2</td>
+              <td><span class="badge badge-success">↓ Mejora</span></td>
+            </tr>
+            <tr>
+              <td><strong>Velocidad E (m/s)</strong></td>
+              <td>2,2</td>
+              <td>1,88</td>
+              <td><1,2</td>
+              <td><span class="badge badge-success">↓ Mejora</span></td>
+            </tr>
+            <tr>
+              <td><strong>Insuficiencia Mitral (m/s)</strong></td>
+              <td>5,30 (112,3 mmHg)</td>
+              <td>5,87 (137,9 mmHg)</td>
+              <td>—</td>
+              <td><span class="badge badge-danger">↑ Empeora</span></td>
+            </tr>
+            <tr>
+              <td><strong>Insuficiencia Tricuspídea (m/s)</strong></td>
+              <td>3,25 (42,3 mmHg)</td>
+              <td>2,77 (30,6 mmHg)</td>
+              <td><3,4 m/s</td>
+              <td><span class="badge badge-success">↓ Mejora</span></td>
+            </tr>
+            <tr>
+              <td><strong>Dp/dt</strong></td>
+              <td>1333,3</td>
+              <td>1333,3</td>
+              <td>—</td>
+              <td><span class="badge badge-info">= Estable</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="section-title" style="margin-top: 3rem;">💊 Medicación Actual (desde 25/06/2026)</h2>
+      
+      <div class="med-card">
+        <div class="med-icon">💊</div>
+        <div class="med-info">
+          <h4>Pimobendan (Vetmedin)</h4>
+          <p>0,27 mg/kg cada 8h · Inotrópico positivo</p>
+          <p><small>1 comp + ½ comp de 2,5 mg + ½ comp de 1,25 mg / 8h (ajuste por peso)</small></p>
+        </div>
+        <div class="med-dose">
+          3 tomas/día
+          <small>cada 8h</small>
         </div>
       </div>
 
-      <div style="text-align: center; margin-top: 2rem; padding: 2rem; background: var(--card-bg); border-radius: var(--radius); border: 1px solid var(--border);">
-        <h3 style="margin-bottom: 1rem; color: var(--text);">⚙️ Gestión de Datos</h3>
-        <p style="color: var(--text-light); margin-bottom: 1.5rem; max-width: 600px; margin-left: auto; margin-right: auto;">
-          Los datos se guardan localmente en tu navegador. Puedes generar datos de ejemplo para visualizar las gráficas o borrar el historial si es necesario.
-        </p>
-        <button class="btn btn-email" onclick="generateSampleData()">🔄 Generar datos de ejemplo</button>
-        <button class="btn btn-danger" onclick="clearData()">🗑️ Borrar historial</button>
+      <div class="med-card">
+        <div class="med-icon">💧</div>
+        <div class="med-info">
+          <h4>Furosemida</h4>
+          <p>1,08 mg/kg cada 12h · Diurético de asa</p>
+          <p><small>15 mg / 12h · Dosis inicial</small></p>
+        </div>
+        <div class="med-dose">
+          2 tomas/día
+          <small>cada 12h</small>
+        </div>
       </div>
+
+      <div class="med-card">
+        <div class="med-icon">🛡️</div>
+        <div class="med-info">
+          <h4>Espironolactona</h4>
+          <p>1,8 mg/kg cada 24h · Diurético ahorrador de K+</p>
+          <p><small>25 mg / 24h</small></p>
+        </div>
+        <div class="med-dose">
+          1 toma/día
+          <small>cada 24h</small>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 2rem; border-left: 5px solid var(--secondary);">
+        <h3>📌 Recomendaciones de la Dra. Capilla (25/06/2026)</h3>
+        <ul style="margin-top: 1rem; padding-left: 1.5rem; color: var(--text-light);">
+          <li style="margin-bottom: 0.5rem;">Continuar con los <strong>cambios dietéticos</strong> instaurados.</li>
+          <li style="margin-bottom: 0.5rem;">Continuar con la terapia médica actual (Pimobendan, Espironolactona, Furosemida).</li>
+          <li style="margin-bottom: 0.5rem;">Seguimiento de <strong>Troponina I</strong>.</li>
+          <li style="margin-bottom: 0.5rem;">Reevaluar en <strong>1 mes (Julio 2026)</strong>.</li>
+          <li>Se aprecia ligera evolución favorable en sobrecarga de volumen y presión, aunque persiste la disfunción sistólica.</li>
+        </ul>
+      </div>
+
     </section>
   </div>
 
@@ -459,23 +755,190 @@
         <p><a href="https://www.sabuvet.com/" target="_blank">🌐 www.sabuvet.com</a></p>
       </div>
       
-      <p style="opacity: 0.8; font-size: 0.9rem; margin-top: 2rem;">© 2026 Eurico - Cocker Spaniel Inglés</p>
+      <p style="opacity: 0.8; font-size: 0.9rem; margin-top: 2rem;">© 2026 Eurico - Mestizo · 5 años</p>
       <p style="opacity: 0.7; font-size: 0.85rem; margin-top: 0.5rem;">Creado con ❤️ por Amador Díaz</p>
     </div>
   </footer>
 
   <script>
-    const medsList = ['pimo-m', 'pimo-t', 'furo-m', 'furo-t', 'espi'];
-    const medNames = {
-      'pimo-m': 'Pimobendan (Mañana)',
-      'pimo-t': 'Pimobendan (Tarde)',
-      'furo-m': 'Furosemida (Mañana)',
-      'furo-t': 'Furosemida (Tarde)',
-      'espi': 'Espironolactona'
+    // Datos del informe ecocardiográfico (comparativa 27/05/26 vs 25/06/26)
+    const fechas = ['27/05/2026', '25/06/2026'];
+    
+    const datos = {
+      fa: [31, 18],                    // Fracción acortamiento (%)
+      peso: [13.8, 14.7],              // Peso (kg)
+      edvi: [288.9, 154.3],            // EDVI (ml/m²)
+      esvi: [123.6, 87.0],             // ESVI (ml/m²)
+      aiao: [2.51, 2.62],              // Ai/Ao
+      velE: [2.2, 1.88],               // Velocidad E (m/s)
+      insfM: [5.30, 5.87],             // Insuficiencia Mitral (m/s)
+      insfT: [3.25, 2.77]              // Insuficiencia Tricuspídea (m/s)
     };
 
-    let progressChartInstance = null;
-    let distributionChartInstance = null;
+    // Configuración común para los gráficos
+    const commonOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(0,0,0,0.8)',
+          padding: 12,
+          titleFont: { size: 13 },
+          bodyFont: { size: 12 }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: false,
+          grid: { color: '#e0e0e0' }
+        },
+        x: {
+          grid: { display: false }
+        }
+      }
+    };
+
+    function createLineChart(canvasId, data, label, color, refLine = null, unit = '') {
+      const ctx = document.getElementById(canvasId).getContext('2d');
+      
+      const datasets = [{
+        label: label,
+        data: data,
+        borderColor: color,
+        backgroundColor: color + '33',
+        borderWidth: 3,
+        pointRadius: 8,
+        pointHoverRadius: 10,
+        pointBackgroundColor: 'white',
+        pointBorderColor: color,
+        pointBorderWidth: 3,
+        fill: true,
+        tension: 0.3
+      }];
+
+      if (refLine !== null) {
+        datasets.push({
+          label: 'Referencia',
+          data: [refLine, refLine],
+          borderColor: '#d32f2f',
+          borderWidth: 2,
+          borderDash: [8, 4],
+          pointRadius: 0,
+          fill: false
+        });
+      }
+
+      return new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: fechas,
+          datasets: datasets
+        },
+        options: {
+          ...commonOptions,
+          plugins: {
+            ...commonOptions.plugins,
+            tooltip: {
+              ...commonOptions.plugins.tooltip,
+              callbacks: {
+                label: function(context) {
+                  return `${context.dataset.label}: ${context.raw}${unit}`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function createBarChart(canvasId, data, label, color, unit = '') {
+      const ctx = document.getElementById(canvasId).getContext('2d');
+      
+      return new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: fechas,
+          datasets: [{
+            label: label,
+            data: data,
+            backgroundColor: [color + 'cc', color + 'cc'],
+            borderColor: color,
+            borderWidth: 2,
+            borderRadius: 8
+          }]
+        },
+        options: {
+          ...commonOptions,
+          plugins: {
+            ...commonOptions.plugins,
+            tooltip: {
+              ...commonOptions.plugins.tooltip,
+              callbacks: {
+                label: function(context) {
+                  return `${label}: ${context.raw}${unit}`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Inicializar todos los gráficos
+    document.addEventListener('DOMContentLoaded', () => {
+      // Fracción de Acortamiento (ref: 30% mínimo)
+      createLineChart('faChart', datos.fa, 'Fracción Acortamiento', '#d32f2f', 30, '%');
+      
+      // Peso
+      createBarChart('pesoChart', datos.peso, 'Peso', '#1b5e20', ' kg');
+      
+      // Volúmenes ventriculares (gráfico doble)
+      const ctxVol = document.getElementById('volChart').getContext('2d');
+      new Chart(ctxVol, {
+        type: 'bar',
+        data: {
+          labels: fechas,
+          datasets: [
+            {
+              label: 'EDVI (ml/m²)',
+              data: datos.edvi,
+              backgroundColor: '#90a3b1cc',
+              borderColor: '#90a3b1',
+              borderWidth: 2,
+              borderRadius: 8
+            },
+            {
+              label: 'ESVI (ml/m²)',
+              data: datos.esvi,
+              backgroundColor: '#f57c00cc',
+              borderColor: '#f57c00',
+              borderWidth: 2,
+              borderRadius: 8
+            }
+          ]
+        },
+        options: {
+          ...commonOptions,
+          plugins: {
+            legend: { display: true, position: 'top' },
+            tooltip: commonOptions.plugins.tooltip
+          }
+        }
+      });
+
+      // Ai/Ao (ref: 2.4)
+      createLineChart('aiaoChart', datos.aiao, 'Ai/Ao', '#7b1fa2', 2.4, '');
+      
+      // Velocidad E (ref: 1.2)
+      createLineChart('velEChart', datos.velE, 'Velocidad E', '#1565c0', 1.2, ' m/s');
+      
+      // Insuficiencia Mitral
+      createLineChart('insfMChart', datos.insfM, 'Insuf. Mitral', '#d32f2f', null, ' m/s');
+      
+      // Insuficiencia Tricuspídea (ref: 3.4)
+      createLineChart('insfTChart', datos.insfT, 'Insuf. Tricuspídea', '#1565c0', 3.4, ' m/s');
+    });
 
     function toggleMenu() {
       const navMenu = document.getElementById('navMenu');
@@ -496,162 +959,6 @@
       document.getElementById('navMenu').classList.remove('active');
       window.scrollTo(0, 0);
     }
-
-    function getHistory() {
-      return JSON.parse(localStorage.getItem('med_history') || '[]');
-    }
-
-    function saveHistory(history) {
-      localStorage.setItem('med_history', JSON.stringify(history));
-    }
-
-    function updateCharts() {
-      const history = getHistory();
-      const today = new Date();
-      
-      // Preparar datos de los últimos 7 días
-      const dates = [];
-      const dataProgress = [];
-      
-      for (let i = 6; i >= 0; i--) {
-        const d = new Date(today);
-        d.setDate(d.getDate() - i);
-        const dateStr = d.toISOString().split('T')[0];
-        dates.push(d.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' }));
-        
-        const count = history.filter(h => h.date === dateStr && medsList.includes(h.medication)).length;
-        dataProgress.push(count);
-      }
-
-      // Actualizar texto de estado
-      const todayStr = today.toISOString().split('T')[0];
-      const todayCount = history.filter(h => h.date === todayStr && medsList.includes(h.medication)).length;
-      document.getElementById('last-update').textContent = today.toLocaleDateString('es-ES');
-      document.getElementById('status-text').textContent = `${todayCount}/5 tomas hoy`;
-
-      // Gráfico de Progreso
-      const ctx1 = document.getElementById('progressChart').getContext('2d');
-      if (progressChartInstance) {
-        progressChartInstance.destroy();
-      }
-      
-      progressChartInstance = new Chart(ctx1, {
-        type: 'bar',
-        data: {
-          labels: dates,
-          datasets: [{
-            label: 'Dosis administradas',
-            data: dataProgress,
-            backgroundColor: dataProgress.map(val => val === 5 ? '#1b5e20' : '#90a3b1'),
-            borderColor: '#1b5e20',
-            borderWidth: 1,
-            borderRadius: 6
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              callbacks: {
-                label: function(context) {
-                  return `Tomas: ${context.raw} de 5`;
-                }
-              }
-            }
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              max: 5,
-              ticks: { stepSize: 1 },
-              grid: { color: '#e0e0e0' }
-            },
-            x: {
-              grid: { display: false }
-            }
-          }
-        }
-      });
-
-      // Gráfico de Distribución
-      const medCounts = {};
-      medsList.forEach(m => medCounts[m] = 0);
-      history.forEach(h => {
-        if (medCounts[h.medication] !== undefined) {
-          medCounts[h.medication]++;
-        }
-      });
-
-      const ctx2 = document.getElementById('distributionChart').getContext('2d');
-      if (distributionChartInstance) {
-        distributionChartInstance.destroy();
-      }
-
-      distributionChartInstance = new Chart(ctx2, {
-        type: 'doughnut',
-        data: {
-          labels: Object.values(medNames),
-          datasets: [{
-            data: Object.values(medCounts),
-            backgroundColor: ['#90a3b1', '#1b5e20', '#f57c00', '#e65100', '#7dabcd'],
-            borderWidth: 2,
-            borderColor: '#ffffff'
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'bottom',
-              labels: {
-                padding: 15,
-                usePointStyle: true,
-                font: { size: 12 }
-              }
-            }
-          }
-        }
-      });
-    }
-
-    function generateSampleData() {
-      const history = [];
-      const today = new Date();
-      
-      for (let i = 6; i >= 0; i--) {
-        const d = new Date(today);
-        d.setDate(d.getDate() - i);
-        const dateStr = d.toISOString().split('T')[0];
-        
-        // Generar entre 3 y 5 tomas aleatorias por día
-        const numMeds = Math.floor(Math.random() * 3) + 3;
-        const shuffled = [...medsList].sort(() => 0.5 - Math.random());
-        const selected = shuffled.slice(0, numMeds);
-        
-        selected.forEach(med => {
-          history.push({ date: dateStr, medication: med });
-        });
-      }
-      
-      saveHistory(history);
-      updateCharts();
-      alert('✅ Datos de ejemplo generados correctamente.');
-    }
-
-    function clearData() {
-      if (confirm('¿Estás seguro de que quieres borrar todo el historial de medicación? Esta acción no se puede deshacer.')) {
-        localStorage.removeItem('med_history');
-        updateCharts();
-        alert('🗑️ Historial borrado correctamente.');
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      updateCharts();
-    });
   </script>
 </body>
 </html>
