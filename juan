@@ -1,1 +1,616 @@
 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juan - La Leyenda</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animación de fondo */
+        .bg-animation {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-animation span {
+            position: absolute;
+            display: block;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 20s infinite linear;
+            border-radius: 50%;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 2rem;
+            color: white;
+            animation: slideDown 1s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+        }
+
+        /* Contenedor principal */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Sección de la foto */
+        .photo-section {
+            text-align: center;
+            margin: 3rem 0;
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .photo-container {
+            position: relative;
+            display: inline-block;
+            border-radius: 50%;
+            padding: 10px;
+            background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            transition: transform 0.3s;
+        }
+
+        .photo-container:hover {
+            transform: rotate(5deg) scale(1.05);
+        }
+
+        .photo-container img {
+            width: 300px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 5px solid white;
+            display: block;
+        }
+
+        .crown {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        /* Tarjetas de elogios */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            cursor: pointer;
+            animation: fadeInUp 1s ease-out both;
+        }
+
+        .card:nth-child(1) { animation-delay: 0.2s; }
+        .card:nth-child(2) { animation-delay: 0.4s; }
+        .card:nth-child(3) { animation-delay: 0.6s; }
+        .card:nth-child(4) { animation-delay: 0.8s; }
+
+        .card:hover {
+            transform: translateY(-10px) rotate(2deg);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .card-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Botón interactivo */
+        .btn-container {
+            text-align: center;
+            margin: 3rem 0;
+        }
+
+        .btn-magic {
+            background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            padding: 1.5rem 3rem;
+            font-size: 1.3rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(245, 87, 108, 0.4);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-magic:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(245, 87, 108, 0.6);
+        }
+
+        .btn-magic:active {
+            transform: translateY(-1px);
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #f0f;
+            position: absolute;
+            animation: confetti-fall 3s linear forwards;
+            z-index: 1000;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Sección de estadísticas */
+        .stats-section {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 3rem;
+            margin: 3rem 0;
+            color: white;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .stat-item {
+            background: rgba(255,255,255,0.2);
+            padding: 2rem;
+            border-radius: 20px;
+            transition: transform 0.3s;
+        }
+
+        .stat-item:hover {
+            transform: scale(1.1);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: white;
+            margin-top: 3rem;
+        }
+
+        .heart {
+            color: #f5576c;
+            animation: heartbeat 1.5s infinite;
+            display: inline-block;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .photo-container img {
+                width: 200px;
+                height: 200px;
+            }
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Modal de sorpresa */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 3rem;
+            border-radius: 30px;
+            text-align: center;
+            max-width: 500px;
+            animation: modalPop 0.5s;
+        }
+
+        @keyframes modalPop {
+            0% { transform: scale(0); }
+            80% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .close-modal {
+            margin-top: 1rem;
+            padding: 0.8rem 2rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <!-- Animación de fondo -->
+    <div class="bg-animation" id="bgAnimation"></div>
+
+    <header>
+        <h1>🌟 JUAN 🌟</h1>
+        <p class="subtitle">No es solo un amigo, es una leyenda</p>
+    </header>
+
+    <div class="container">
+        <!-- Sección de foto -->
+        <div class="photo-section">
+            <div class="photo-container">
+                <div class="crown">👑</div>
+                <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k=" 
+                     alt="Juan - El Mejor" 
+                     onerror="this.src='https://via.placeholder.com/300x300/667eea/ffffff?text=Juan+👑'">
+            </div>
+            <h2 style="color: white; margin-top: 2rem; font-size: 2rem;">¡El Más Grande!</h2>
+        </div>
+
+        <!-- Tarjetas de elogios -->
+        <div class="cards-container">
+            <div class="card" onclick="showCompliment('amigo')">
+                <div class="card-icon">🤝</div>
+                <h3>El Mejor Amigo</h3>
+                <p>Juan es ese amigo que siempre está ahí, en las buenas y en las malas. ¡Un verdadero hermano!</p>
+            </div>
+
+            <div class="card" onclick="showCompliment('divertido')">
+                <div class="card-icon">😄</div>
+                <h3>Divertido</h3>
+                <p>Con Juan nunca te aburres. Siempre tiene una historia graciosa o un chiste que te saca una sonrisa.</p>
+            </div>
+
+            <div class="card" onclick="showCompliment('generoso')">
+                <div class="card-icon">💝</div>
+                <h3>Generoso</h3>
+                <p>Su corazón es tan grande como su personalidad. Siempre dispuesto a ayudar sin esperar nada a cambio.</p>
+            </div>
+
+            <div class="card" onclick="showCompliment('unico')">
+                <div class="card-icon">⭐</div>
+                <h3>Único</h3>
+                <p>No hay nadie como Juan. Es auténtico, genuino y simplemente increíble tal como es.</p>
+            </div>
+        </div>
+
+        <!-- Estadísticas -->
+        <div class="stats-section">
+            <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">Nivel de Awesome de Juan</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number" data-target="100">0</span>%
+                    <div class="stat-label">Carisma</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="99">0</span>%
+                    <div class="stat-label">Simpatía</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="100">0</span>%
+                    <div class="stat-label">Lealtad</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="98">0</span>%
+                    <div class="stat-label">Diversión</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botón mágico -->
+        <div class="btn-container">
+            <button class="btn-magic" onclick="celebrate()">
+                🎉 ¡Celebrar a Juan! 🎉
+            </button>
+        </div>
+    </div>
+
+    <footer>
+        <p style="font-size: 1.3rem; margin-bottom: 1rem;">
+            Hecho con <span class="heart">❤️</span> para el mejor amigo del mundo
+        </p>
+        <p style="opacity: 0.8;">© 2026 - Todos los derechos reservados para Juan</p>
+    </footer>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">🎊</div>
+            <h2 id="modal-title" style="color: #667eea; margin-bottom: 1rem;"></h2>
+            <p id="modal-text" style="color: #666; margin-bottom: 1.5rem;"></p>
+            <button class="close-modal" onclick="closeModal()">¡Gracias!</button>
+        </div>
+    </div>
+
+    <script>
+        // Crear burbujas de fondo
+        function createBubbles() {
+            const container = document.getElementById('bgAnimation');
+            for (let i = 0; i < 20; i++) {
+                const span = document.createElement('span');
+                span.style.left = Math.random() * 100 + '%';
+                span.style.animationDuration = (Math.random() * 20 + 10) + 's';
+                span.style.animationDelay = Math.random() * 20 + 's';
+                span.style.opacity = Math.random() * 0.5;
+                span.style.width = span.style.height = (Math.random() * 30 + 10) + 'px';
+                container.appendChild(span);
+            }
+        }
+
+        // Animación de números
+        function animateNumbers() {
+            const counters = document.querySelectorAll('.stat-number');
+            counters.forEach(counter => {
+                const target = +counter.getAttribute('data-target');
+                const increment = target / 100;
+                let current = 0;
+                
+                const updateCounter = () => {
+                    if (current < target) {
+                        current += increment;
+                        counter.innerText = Math.ceil(current);
+                        setTimeout(updateCounter, 20);
+                    } else {
+                        counter.innerText = target;
+                    }
+                };
+                updateCounter();
+            });
+        }
+
+        // Crear confetti
+        function createConfetti() {
+            const colors = ['#f093fb', '#f5576c', '#4facfe', '#00f2fe', '#43e97b', '#fa709a'];
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                    confetti.style.width = confetti.style.height = (Math.random() * 10 + 5) + 'px';
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 50);
+            }
+        }
+
+        // Celebrar
+        function celebrate() {
+            createConfetti();
+            
+            const compliments = [
+                "¡Juan es el mejor!",
+                "¡Qué suerte tenerte como amigo!",
+                "¡Eres increíble, Juan!",
+                "¡Nadie como tú!",
+                "¡Gracias por existir!"
+            ];
+            
+            const randomCompliment = compliments[Math.floor(Math.random() * compliments.length)];
+            
+            setTimeout(() => {
+                alert(randomCompliment + ' 🎉🎊');
+            }, 500);
+        }
+
+        // Mostrar elogio
+        function showCompliment(type) {
+            const compliments = {
+                amigo: {
+                    title: "🤝 El Mejor Amigo",
+                    text: "Juan es esa persona que ilumina cualquier lugar con su presencia. ¡Un verdadero tesoro!"
+                },
+                divertido: {
+                    title: "😄 El Rey del Humor",
+                    text: "Con Juan, cada momento se convierte en una aventura llena de risas y buenos momentos."
+                },
+                generoso: {
+                    title: "💝 Corazón de Oro",
+                    text: "Su generosidad no tiene límites. Siempre está dispuesto a dar una mano sin esperar nada a cambio."
+                },
+                unico: {
+                    title: "⭐ Único e Irrepetible",
+                    text: "Juan es auténtico, genuino y simplemente especial. ¡No hay nadie como él!"
+                }
+            };
+            
+            document.getElementById('modal-title').textContent = compliments[type].title;
+            document.getElementById('modal-text').textContent = compliments[type].text;
+            document.getElementById('modal').style.display = 'flex';
+            createConfetti();
+        }
+
+        // Cerrar modal
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // Cerrar modal al hacer clic fuera
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Efecto parallax en scroll
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.photo-container');
+            if (parallax) {
+                parallax.style.transform = `translateY(${scrolled * 0.5}px) rotate(${scrolled * 0.02}deg)`;
+            }
+        });
+
+        // Inicializar
+        window.onload = function() {
+            createBubbles();
+            setTimeout(animateNumbers, 1000);
+            
+            // Mensaje de bienvenida
+            console.log("🌟 ¡Bienvenido a la página de Juan! 🌟");
+            console.log("Prepárate para celebrar al mejor amigo del mundo");
+        };
+
+        // Easter egg - Konami code
+        let konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        let konamiIndex = 0;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === konamiCode[konamiIndex]) {
+                konamiIndex++;
+                if (konamiIndex === konamiCode.length) {
+                    activateSuperMode();
+                    konamiIndex = 0;
+                }
+            } else {
+                konamiIndex = 0;
+            }
+        });
+
+        function activateSuperMode() {
+            document.body.style.background = 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)';
+            createConfetti();
+            setTimeout(() => {
+                alert('🎮 ¡MODO SUPER JUAN ACTIVADO! 🎮\n\n¡Eres un verdadero fan de Juan!');
+            }, 500);
+        }
+    </script>
+</body>
+</html>
