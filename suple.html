@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocolo de Rescate Metabólico - Eurico</title>
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --secondary-color: #f8f9fa;
+            --danger-color: #dc3545;
+            --success-color: #28a745;
+            --warning-color: #dd6b20;
+            --text-color: #333333;
+            --border-color: #dee2e6;
+            --card-bg: #f8fafc;
+            --card-border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            max-width: 1050px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+
+        /* Contenedor principal */
+        .main-container {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            padding: 25px;
+            margin: 40px auto;
+        }
+
+        /* Encabezado de sección */
+        .section-header {
+            text-align: center;
+            margin-bottom: 35px;
+            border-bottom: 2px solid #eaeded;
+            padding-bottom: 20px;
+        }
+
+        .section-header h2 {
+            color: #1a365d;
+            font-size: 26px;
+            margin: 0 0 10px 0;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .section-header p {
+            color: #627d98;
+            font-size: 15px;
+            max-width: 750px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        /* Tarjetas */
+        .card {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+            background-color: var(--secondary-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .card h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 8px;
+            margin-top: 0;
+            font-size: 1.5rem;
+        }
+
+        .card h3 {
+            color: #495057;
+            font-size: 1.1rem;
+            margin-top: 0;
+        }
+
+        /* Grid para estudios científicos */
+        .studies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .study-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .study-card.blue { border-left-color: #3182ce; }
+        .study-card.green { border-left-color: #38a169; }
+        .study-card.orange { border-left-color: var(--warning-color); }
+
+        .study-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .study-badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 12px;
+            text-transform: uppercase;
+        }
+
+        .badge-blue { background: #ebf8ff; color: #2b6cb0; }
+        .badge-green { background: #e6fffa; color: #234e52; }
+        .badge-orange { background: #fffaf0; color: var(--warning-color); }
+
+        .study-author {
+            color: #718096;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .study-card h3 {
+            color: #2d3748;
+            font-size: 17px;
+            margin: 0 0 8px 0;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .study-card p {
+            font-size: 13.5px;
+            color: #4a5568;
+            margin: 0 0 15px 0;
+            line-height: 1.5;
+            text-align: justify;
+        }
+
+        .study-link {
+            display: inline-block;
+            text-align: center;
+            color: #ffffff;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        .study-link:hover { opacity: 0.9; }
+        .study-link.blue { background: #3182ce; }
+        .study-link.green { background: #38a169; }
+        .study-link.orange { background: var(--warning-color); }
+
+        /* Información del paciente */
+        .patient-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .patient-info span {
+            color: var(--primary-color);
+        }
+
+        /* Tablas */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: #ffffff;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: #e9ecef;
+            color: #495057;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: #f1f3f5;
+        }
+
+        /* Badges de estado */
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            display: inline-block;
+        }
+
+        .badge-danger {
+            background-color: #f8d7da;
+            color: var(--danger-color);
+        }
+
+        .badge-success {
+            background-color: #d4edda;
+            color: var(--success-color);
+        }
+
+        .deficit {
+            color: var(--danger-color);
+            font-weight: bold;
+        }
+
+        /* Alertas */
+        .alert-box {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            color: #856404;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-size: 0.95rem;
+        }
+
+        /* Cronograma */
+        .schedule-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .schedule-list li {
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--border-color);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .schedule-list li:last-child {
+            border-bottom: none;
+        }
+
+        .time {
+            font-weight: bold;
+            color: var(--primary-color);
+            min-width: 80px;
+        }
+
+        /* Card destacada */
+        .card-highlight {
+            background-color: #e8f4fd;
+            border-color: #b8daff;
+        }
+
+        /* Sección de Recursos y Enlaces */
+        .resources-section {
+            margin-top: 30px;
+        }
+
+        .resource-category {
+            margin-bottom: 30px;
+        }
+
+        .resource-category h3 {
+            color: #1a365d;
+            font-size: 20px;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .resource-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .resource-item {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .resource-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .resource-item h4 {
+            color: #2d3748;
+            font-size: 16px;
+            margin: 0 0 8px 0;
+            font-weight: 600;
+        }
+
+        .resource-item p {
+            color: #4a5568;
+            font-size: 14px;
+            margin: 0 0 10px 0;
+            line-height: 1.5;
+        }
+
+        .resource-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .resource-link:hover {
+            color: #003d82;
+            text-decoration: underline;
+        }
+
+        .resource-link::after {
+            content: "→";
+            margin-left: 5px;
+            transition: transform 0.2s;
+        }
+
+        .resource-link:hover::after {
+            transform: translateX(3px);
+        }
+
+        .resource-type {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .type-clinical {
+            background: #ebf8ff;
+            color: #2b6cb0;
+        }
+
+        .type-product {
+            background: #f0fff4;
+            color: #22543d;
+        }
+
+        .type-case {
+            background: #fffaf0;
+            color: #c05621;
+        }
+
+        /* Nota importante */
+        .important-note {
+            background: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+
+        .important-note strong {
+            color: #92400e;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .important-note p {
+            color: #78350f;
+            margin: 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        
+        <!-- Encabezado principal -->
+        <div class="section-header">
+            <h2>📚 Protocolo de Rescate Metabólico para Eurico</h2>
+            <p>
+                Base científica y documentación clínica para el tratamiento de Cardiomiopatía Dilatada (CMD) en Cocker Spaniel Inglés mediante suplementación metabólica específica.
+            </p>
+        </div>
+
+        <!-- Sección 1: Evidencia Científica -->
+        <div class="card">
+            <h2>Base Científica: Casos Documentados de Recuperación</h2>
+            <p>
+                A diferencia de otras razas, la literatura veterinaria internacional demuestra que una cohorte significativa de Cocker Spaniels con CMD responde a la suplementación metabólica, logrando un remodelado inverso del corazón.
+            </p>
+        </div>
+
+        <!-- Grid de estudios científicos -->
+        <div class="studies-grid">
+            
+            <!-- Estudio 1 -->
+            <div class="study-card blue">
+                <div>
+                    <div class="study-header">
+                        <span class="study-badge badge-blue">Ensayo Multicéntrico</span>
+                        <span class="study-author">Dr. Kittleson et al.</span>
+                    </div>
+                    <h3>Estudio MUST: Respondedores a Taurina y Carnitina</h3>
+                    <p>
+                        Evaluación de control ciego en Cocker Spaniels con CMD y deficiencia sistémica. Tras la suplementación activa, los perros experimentaron una mejora miocárdica tan marcada que permitió la <strong>retirada total de la terapia diurética convencional</strong> (furosemida) y un mantenimiento óptimo de la calidad de vida durante años.
+                    </p>
+                </div>
+                <a href="https://pubmed.ncbi.nlm.nih.gov/9298474/" target="_blank" rel="noopener" class="study-link blue">
+                    📄 Ver Estudio en PubMed →
+                </a>
+            </div>
+
+            <!-- Estudio 2 -->
+            <div class="study-card green">
+                <div>
+                    <div class="study-header">
+                        <span class="study-badge badge-green">Cocker Spaniel Inglés</span>
+                        <span class="study-author">JVIM (Londres)</span>
+                    </div>
+                    <h3>CMD y Niveles Bajos de Taurina Plasmática</h3>
+                    <p>
+                        Investigación específica sobre el fenotipo de la CMD en el Cocker Inglés. El estudio evidenció que en ejemplares con niveles deficientes (&lt;50 μmol/L), la introducción del suplemento nutricional dio lugar de forma consistente a una <strong>reducción significativa de las dimensiones del ventrículo izquierdo</strong> y a una mejora drástica de la función sistólica.
+                    </p>
+                </div>
+                <a href="https://pubmed.ncbi.nlm.nih.gov/33594697/" target="_blank" rel="noopener" class="study-link green">
+                    📄 Ver Estudio en PubMed →
+                </a>
+            </div>
+
+            <!-- Estudio 3 -->
+            <div class="study-card orange">
+                <div>
+                    <div class="study-header">
+                        <span class="study-badge badge-orange">Caso Crítico Reversible</span>
+                        <span class="study-author">Wiley Online Library</span>
+                    </div>
+                    <h3>Remodelación Ecocardiográfica desde el 9%</h3>
+                    <p>
+                        Monitoreo longitudinal de un paciente que ingresó en estado crítico con edema pulmonar agudo y una fracción de acortamiento miocárdica de solo el 9%. Tras la adición de terapia combinada con aminoácidos esenciales, el corazón logró un <strong>marcado remodelado anatómico estructural</strong>, elevando su fracción de contracción hasta el 20% en 22 semanas.
+                    </p>
+                </div>
+                <a href="https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1751-0813.1997.tb11253.x" target="_blank" rel="noopener" class="study-link orange">
+                    📄 Ver Estudio en Wiley →
+                </a>
+            </div>
+
+        </div>
+
+        <!-- Sección 2: Informe Técnico -->
+        <div class="card">
+            <h2>Informe Técnico de Dosificación Clínica</h2>
+            <div class="patient-info">
+                <div>Paciente: <span>Eurico</span></div>
+                <div>Raza: <span>Cocker Spaniel Inglés</span></div>
+                <div>Peso Actual: <span>14.7 kg</span></div>
+                <div>Fracción Acortamiento: <span style="color:var(--danger-color);">18%</span></div>
+            </div>
+            <p>
+                Estudio de viabilidad terapéutica comparativa entre el soporte comercial generalista (Cardio I / InuCardin) y el protocolo de rescate metabólico masivo utilizado en los ensayos clínicos de referencia para CMD en la raza Cocker Spaniel.
+            </p>
+        </div>
+
+        <!-- Análisis comparativo -->
+        <div class="card">
+            <h2>Análisis Comparativo Miligramo a Miligramo</h2>
+            <h3>Dosis Diaria Calculada para Eurico (14.7 kg)</h3>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Compuesto</th>
+                        <th>Protocolo Científico (UC Davis / MUST)</th>
+                        <th>Dosis Comercial Cardio I (1.5 comp/día)</th>
+                        <th>Déficit Biológico</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>L-Taurina</strong></td>
+                        <td>
+                            <span class="badge badge-success">1.000 mg / día</span><br>
+                            <small>(500 mg cada 12h)</small>
+                        </td>
+                        <td>
+                            <span class="badge badge-danger">300 mg / día</span><br>
+                            <small>(200 mg por comprimido)</small>
+                        </td>
+                        <td>
+                            <span class="deficit">-70.0%</span><br>
+                            <small class="deficit">Subdosificación Grave</small>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>L-Carnitina</strong></td>
+                        <td>
+                            <span class="badge badge-success">2.200 mg / día</span><br>
+                            <small>(735 mg cada 8h / 50mg/kg)</small>
+                        </td>
+                        <td>
+                            <span class="badge badge-danger">300 mg / día</span><br>
+                            <small>(200 mg por comprimido)</small>
+                        </td>
+                        <td>
+                            <span class="deficit">-86.3%</span><br>
+                            <small class="deficit">Subdosificación Crítica</small>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="alert-box">
+                <strong>Riesgo de Toxicidad Cruzada:</strong> Intentar alcanzar las dosis científicas multiplicando las tomas de Cardio I o InuCardin (hasta dar 11 comprimidos al día) provocaría una sobredosificación peligrosa y potencialmente letal de otros componentes activos del producto, como el <i>Ginkgo Biloba</i> y el <i>Espino Blanco</i>. Por tanto, es obligatoria la sustitución por aminoácidos puros de grado humano.
+            </div>
+        </div>
+
+        <!-- Cronograma -->
+        <div class="card">
+            <h2>Cronograma de Administración Propuesto</h2>
+            <h3>Sincronización con el tratamiento hemodinámico de Eurico (Cada 8 y 12 horas)</h3>
+            
+            <ul class="schedule-list">
+                <li>
+                    <span class="time">Mañana</span>
+                    <span>Pimobendan + Diuréticos + <strong>1 Cápsula Taurina (500mg)</strong> + <strong>1½ Cápsula Carnitina (750mg)</strong></span>
+                </li>
+                <li>
+                    <span class="time">Tarde</span>
+                    <span>Pimobendan + <strong>1½ Cápsula Carnitina (750mg)</strong></span>
+                </li>
+                <li>
+                    <span class="time">Noche</span>
+                    <span>Pimobendan + Diuréticos + <strong>1 Cápsula Taurina (500mg)</strong> + <strong>1½ Cápsula Carnitina (750mg)</strong></span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Fundamentación científica -->
+        <div class="card card-highlight">
+            <h2>Fundamentación Historiográfica y Científica</h2>
+            <p>
+                <strong>1. Estudio MUST (Multicenter Spaniel Trial) - Dr. Mark Kittleson:</strong> 
+                Demostró que la CMD en el Cocker Spaniel tiene una base metabólica única y que la suplementación conjunta y masiva de L-Taurina y L-Carnitina pura induce una remodelación miocárdica inversa, permitiendo en un alto porcentaje de casos la retirada completa de los fármacos diuréticos crónicos.
+            </p>
+            <p>
+                <strong>2. Estudio de Prevalencia Británico (Basili M, et al.):</strong> 
+                Confirmó que el 81% de los Cocker Spaniels Ingleses diagnosticados con CMD presentan deficiencias sistémicas severas de taurina en el plasma sanguíneo.
+            </p>
+            <p>
+                <strong>3. Criterio de Interferencia Analítica:</strong> 
+                El valor normalizado de taurina reflejado en la analítica previa de Eurico se cataloga metodológicamente como un artefacto preanalítico (sesgo farmacológico inducido), debido a que el paciente ya se encontraba bajo suplementación activa continuada al extraer la muestra.
+            </p>
+        </div>
+
+        <!-- SECCIÓN DE RECURSOS Y ENLACES ADICIONALES -->
+        <div class="resources-section">
+            <div class="card">
+                <h2>📖 Recursos Clínicos y Productos Recomendados</h2>
+                <p style="color: #627d98; font-size: 14px; margin-bottom: 25px;">
+                    Documentación complementaria y referencias de productos para la implementación del protocolo terapéutico.
+                </p>
+
+                <!-- Recursos Clínicos -->
+                <div class="resource-category">
+                    <h3>🏥 Documentación Clínica y Farmacológica</h3>
+                    <ul class="resource-list">
+                        
+                        <!-- Manual MSD -->
+                        <li class="resource-item">
+                            <span class="resource-type type-clinical">Referencia Farmacológica</span>
+                            <h4>Manual MSD - Medicamentos Cardíacos para Perros y Gatos</h4>
+                            <p>
+                                Tabla completa de medicamentos cardíacos veterinarios con dosificaciones, indicaciones y contraindicaciones. 
+                                <strong>Relevancia:</strong> Permite contrastar el protocolo de suplementación con la farmacología cardiovascular convencional 
+                                (Pimobendan, diuréticos, IECA) y verificar posibles interacciones medicamentosas.
+                            </p>
+                            <a href="https://www.msdvetmanual.com/es/multimedia/table/medicamentos-card%C3%ADacos-para-perros-y-gatos" 
+                               target="_blank" 
+                               rel="noopener" 
+                               class="resource-link">
+                                Consultar Manual MSD Veterinario
+                            </a>
+                        </li>
+
+                        <!-- Caso Clínico -->
+                        <li class="resource-item">
+                            <span class="resource-type type-case">Caso Clínico</span>
+                            <h4>Manejo Exitoso de CMD con Fibrilación Auricular en Canino</h4>
+                            <p>
+                                Reporte de caso clínico publicado en ClincOncVet sobre el tratamiento exitoso de un paciente canino con 
+                                Cardiomiopatía Dilatada y fibrilación auricular de aparición aguda. 
+                                <strong>Relevancia:</strong> Demuestra la viabilidad del manejo integral de casos complejos de CMD 
+                                mediante abordaje multimodal que incluye soporte metabólico.
+                            </p>
+                            <a href="https://revistas-veterinaria.multimedica.es/clinoncovet/manejo-exitoso-de-un-paciente-canino-con-cardiomiopatia-dilatada-y-fibrilacion-auricular-de-aparicion-aguda-secundarias-al-tratamiento-con-doxorrubicina/" 
+                               target="_blank" 
+                               rel="noopener" 
+                               class="resource-link">
+                                Leer Caso Clínico Completo
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+
+                <!-- Productos de Suplementación -->
+                <div class="resource-category">
+                    <h3>💊 Productos de Suplementación Específica</h3>
+                    <p style="color: #4a5568; font-size: 14px; margin-bottom: 15px; font-style: italic;">
+                        Referencias de productos comerciales de grado humano que cumplen con las especificaciones de pureza y dosificación 
+                        requeridas para el protocolo de rescate metabólico.
+                    </p>
+                    
+                    <ul class="resource-list">
+                        
+                        <!-- L-Carnitina Solgar -->
+                        <li class="resource-item">
+                            <span class="resource-type type-product">Suplemento - L-Carnitina</span>
+                            <h4>Solgar L-Carnitina 500 mg - Forma Libre (30 tabletas)</h4>
+                            <p>
+                                <strong>Composición:</strong> L-Carnitina en forma libre (tartrato), 500 mg por tableta.<br>
+                                <strong>Presentación:</strong> 30 tabletas por envase.<br>
+                                <strong>Cálculo para Eurico:</strong> Para alcanzar los 2.200 mg/día requeridos, se necesitarían 
+                                aproximadamente 4-5 tabletas diarias divididas en 3 tomas (mañana: 1.5, tarde: 1.5, noche: 1.5).<br>
+                                <strong>Nota:</strong> La forma libre presenta mejor biodisponibilidad que otras formas de carnitina.
+                            </p>
+                            <a href="https://laparafarmaciaencasa.com/nutricion-y-dietetica/suplementos/quema-grasas/solgar-l-carnitina-500-mg-forma-libre-30-tabletas/" 
+                               target="_blank" 
+                               rel="noopener" 
+                               class="resource-link">
+                                Ver Producto - Solgar L-Carnitina
+                            </a>
+                        </li>
+
+                        <!-- Taurina Now Foods -->
+                        <li class="resource-item">
+                            <span class="resource-type type-product">Suplemento - Taurina</span>
+                            <h4>Now Foods Taurina 500 mg (100 cápsulas)</h4>
+                            <p>
+                                <strong>Composición:</strong> Taurina pura, 500 mg por cápsula.<br>
+                                <strong>Presentación:</strong> 100 cápsulas vegetales por envase.<br>
+                                <strong>Cálculo para Eurico:</strong> Para alcanzar los 1.000 mg/día requeridos, se necesitan 
+                                2 cápsulas diarias divididas en 2 tomas (mañana: 1 cápsula, noche: 1 cápsula).<br>
+                                <strong>Ventaja:</strong> Now Foods es una marca reconocida por sus controles de calidad y pureza 
+                                en suplementos nutricionales.
+                            </p>
+                            <a href="https://www.naturefoods.es/594479-taurina-500-mg-100-capsulas-cps-now-foods" 
+                               target="_blank" 
+                               rel="noopener" 
+                               class="resource-link">
+                                Ver Producto - Now Foods Taurina
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+
+                <!-- Nota importante -->
+                <div class="important-note">
+                    <strong>⚠️ Consideraciones Importantes:</strong>
+                    <p>
+                        1. Los productos mencionados son referencias de grado humano que cumplen con los estándares de pureza necesarios. 
+                        Consulte siempre con su veterinario antes de iniciar cualquier protocolo de suplementación.<br>
+                        2. Las dosis deben ser calculadas individualmente según el peso del paciente y su condición clínica específica.<br>
+                        3. Es fundamental realizar analíticas de seguimiento para monitorizar los niveles plasmáticos de taurina y carnitina, 
+                        así como la función renal y hepática durante el tratamiento.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
